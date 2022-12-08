@@ -44,7 +44,7 @@ public class DrawingFrame extends JFrame{
 	}
 
 	public DrawingFrame() {
-		setResizable(false);
+		setResizable(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("IT 7/2020 Ilic Filip");
 		

@@ -2,6 +2,7 @@ package mvc;
 
 import java.awt.Color;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JOptionPane;
@@ -10,6 +11,7 @@ import javax.swing.JPanel;
 import adapter.HexagonAdapter;
 import drawing.DlgCircle;
 import drawing.DlgDonut;
+import drawing.DlgHexagon;
 import drawing.DlgLine;
 import drawing.DlgPoint;
 import drawing.DlgRectangle;
@@ -26,7 +28,6 @@ public class DrawingController {
     private boolean selectModify;
     private Shape shape;
     private Color pointClr;
-	
 	private Point sP;
 	private DrawingModel model;
 	
@@ -44,12 +45,7 @@ public class DrawingController {
 		Shape sh;
 		Point clickPoint=new Point(e.getX(),e.getY());
 		
-		if(frame.getTglbtnHexagon().isSelected()) {
-			Hexagon hex = new Hexagon(e.getX(),e.getY(),15);
-			sh = new HexagonAdapter(hex);
-			model.add(sh);
-			frame.repaint();
-		}
+		
 		
 			
 		
@@ -74,9 +70,31 @@ public class DrawingController {
 				sP=null;
 				
 			}
+		}
+			
+		if(frame.getTglbtnHexagon().isSelected()) {
+			DlgHexagon dlgHexagon = new DlgHexagon();
+			dlgHexagon.getTxtX().setText(Integer.toString(e.getX()));
+			dlgHexagon.getTxtY().setText(Integer.toString(e.getY()));
+			dlgHexagon.getTxtX().setEditable(false);
+			dlgHexagon.getTxtY().setEditable(false);
+			dlgHexagon.setVisible(true);
+			
+			if(dlgHexagon.isGood()) {
+				Hexagon hex = new Hexagon(e.getX(),e.getY(),Integer.parseInt(dlgHexagon.getTxtRadius().getText()));
+				hex.setBorderColor(dlgHexagon.getBtnBorder().getBackground());
+				hex.setAreaColor(dlgHexagon.getBtnInner().getBackground());
+				sh = new HexagonAdapter(hex);
+				model.add(sh);
+				frame.repaint();
+				
+				
+			}
+			
 			
 			
 		}
+		
 		 if(frame.getTglbtnCircle().isSelected()) {
 			DlgCircle dlgCircle=new DlgCircle();
 			dlgCircle.getTxtX().setText(Integer.toString(e.getX()));
@@ -164,6 +182,7 @@ public class DrawingController {
 		if(shape != null)
 			shape.setSelected(true);
 		frame.repaint();
+		
 		
 	}
 	
@@ -384,6 +403,40 @@ public class DrawingController {
 						}
 						
 				}
+						
+					}
+					else if(model.getShapes().get(i) instanceof HexagonAdapter) {
+						if(model.getShapes().get(i).isSelected()) {
+							DlgHexagon dlgHex = new DlgHexagon();
+							HexagonAdapter h1 = (HexagonAdapter) model.getShapes().get(i);
+							dlgHex.getTxtX().setText(Integer.toString(h1.getHexagon().getX()));
+							dlgHex.getTxtY().setText(Integer.toString(h1.getHexagon().getY()));
+							dlgHex.getTxtRadius().setText(Integer.toString(h1.getHexagon().getR()));
+							dlgHex.getBtnBorder().setBackground(h1.getHexagon().getBorderColor());
+							dlgHex.getBtnInner().setBackground(h1.getHexagon().getAreaColor());
+							dlgHex.setVisible(true);
+							setSelectModify(true);
+							
+							if(dlgHex.isGood()) {
+								int dX = (Integer.parseInt(dlgHex.getTxtX().getText()));
+								int dY = (Integer.parseInt(dlgHex.getTxtY().getText()));
+								int r = (Integer.parseInt(dlgHex.getTxtRadius().getText()));
+								
+								Hexagon h = new Hexagon(dX,dY,r);
+								h.setBorderColor(dlgHex.getBtnBorder().getBackground());
+								h.setAreaColor(dlgHex.getBtnInner().getBackground());
+								
+								HexagonAdapter ha = new HexagonAdapter(h);
+								model.getShapes().remove(i);
+								frame.repaint();
+								model.getShapes().add(ha);
+							}
+							else {
+								model.getShapes().get(i).setSelected(false);
+								frame.repaint();
+							}
+							
+						}
 						
 					}
 			

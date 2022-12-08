@@ -3,13 +3,16 @@ package adapter;
 import java.awt.Graphics;
 
 import geometry.Shape;
+import geometry.ShapeShape;
 import hexagon.Hexagon;
 
-public class HexagonAdapter extends Shape {
+public class HexagonAdapter extends Shape{
 	
 	private Hexagon hexagon;
 	
 	
+	
+
 
 	public HexagonAdapter(Hexagon hex) {
 		this.hexagon=hex;
@@ -43,6 +46,19 @@ public class HexagonAdapter extends Shape {
 		hexagon.paint(g);
 		
 	}
+
+
+	public Hexagon getHexagon() {
+		return hexagon;
+	}
+
+	public void setHexagon(Hexagon hexagon) {
+		this.hexagon = hexagon;
+	}
+
+	
+
+	
 
 	
 	
