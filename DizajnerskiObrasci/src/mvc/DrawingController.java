@@ -1,53 +1,149 @@
-package drawing;
+package mvc;
 
 import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.event.MouseEvent;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import adapter.HexagonAdapter;
+import drawing.DlgCircle;
+import drawing.DlgDonut;
+import drawing.DlgLine;
+import drawing.DlgPoint;
+import drawing.DlgRectangle;
 import geometry.Circle;
 import geometry.Donut;
 import geometry.Line;
 import geometry.Point;
 import geometry.Rectangle;
 import geometry.Shape;
+import hexagon.Hexagon;
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.Iterator;
-
-public class PnlDrawing extends JPanel {
-	
-	
-	private ArrayList<Shape> shapes= new ArrayList<Shape>();
-    private boolean select;
+public class DrawingController {
+	private boolean select;
     private boolean selectModify;
     private Shape shape;
-  private Color pointClr;
+    private Color pointClr;
+	
+	private Point sP;
+	private DrawingModel model;
+	
+	private DrawingFrame frame;
+	
+	public DrawingController(DrawingModel model, DrawingFrame frame) {
+		this.model = model;
+		this.frame = frame;
+	}
+
 	
 
-	/**
-	 * Create the panel.
-	 */
-	public PnlDrawing() {
-	     
+	public void mouseClicked(MouseEvent e) {
+
+		Shape sh;
+		Point clickPoint=new Point(e.getX(),e.getY());
+		
+		if(frame.getTglbtnHexagon().isSelected()) {
+			Hexagon hex = new Hexagon(e.getX(),e.getY(),15);
+			sh = new HexagonAdapter(hex);
+			model.add(sh);
+			frame.repaint();
+		}
+		
+			
+		
+		if(frame.getTglbtnPoint().isSelected()) {
+			sh=new Point(e.getX(),e.getY(), Color.black);
+			model.add(sh);
+			frame.repaint();
+			
+		}
+		
+		if(frame.getTglbtnLine().isSelected()) {
+		
+			if(sP==null) {
+				sP=clickPoint;
+				
 			}
-    
-
-	public ArrayList<Shape> getShapes() {
-		return shapes;
-	}
-
-	public void setShapes(ArrayList<Shape> shapes) {
-		this.shapes = shapes;
-	}
-
+			else {
+				sh=new Line(sP, new Point(e.getX(), e.getY()), Color.black);
+				
+				model.add(sh);
+				frame.repaint();
+				sP=null;
+				
+			}
+			
+			
+		}
+		 if(frame.getTglbtnCircle().isSelected()) {
+			DlgCircle dlgCircle=new DlgCircle();
+			dlgCircle.getTxtX().setText(Integer.toString(e.getX()));
+			dlgCircle.getTxtY().setText(Integer.toString(e.getY()));
+			dlgCircle.getTxtX().setEditable(false);
+			dlgCircle.getTxtY().setEditable(false);
+			dlgCircle.setVisible(true);
+			
+			if(dlgCircle.isGood()) {
+				Circle c=new Circle(new Point(e.getX(),e.getY()),(Integer.parseInt(dlgCircle.getTxtRadius().getText())), dlgCircle.getBtnCircleBorder().getBackground(), dlgCircle.getBtnCircleColorInner().getBackground());
+				model.add(c);
+				frame.repaint();
+			}
+			
+			
+			
+		}
+		 if(frame.getTglbtnRectangle().isSelected()) {
+			 	DlgRectangle dlgRec=new DlgRectangle();
+				dlgRec.getTxtX().setText(Integer.toString(e.getX()));
+				dlgRec.getTxtY().setText(Integer.toString(e.getY()));
+				dlgRec.getTxtX().setEditable(false);
+				dlgRec.getTxtY().setEditable(false);
+			 	dlgRec.setVisible(true);
+			 
+				if (dlgRec.isOkk()){
+					int w=(Integer.parseInt(dlgRec.getTxtWidth().getText()));
+					int h=(Integer.parseInt(dlgRec.getTxtHeight().getText()));
+					Color c1=dlgRec.getBtnBorderColor().getBackground();
+					Color c2=dlgRec.getBtnInnerColor().getBackground();
+					Rectangle r=new Rectangle(new Point(e.getX(),e.getY()),w, h, c1, c2);
+					model.add(r);
+					frame.repaint();
+				}
+			
+			
+		}
+		 if(frame.getTglbtnDonut().isSelected()) {
+			DlgDonut dlgDonut =new DlgDonut();
+			dlgDonut.getTxtX().setText(Integer.toString(e.getX()));
+			dlgDonut.getTxtY().setText(Integer.toString(e.getY()));
+			dlgDonut.getTxtX().setEditable(false);
+			dlgDonut.getTxtY().setEditable(false);
+		 	dlgDonut.setVisible(true);
+		 	
+		 	if(dlgDonut.isOkkk()) {
+		 		int rad=(Integer.parseInt(dlgDonut.getTxtRadius().getText()));
+		 		int inner=(Integer.parseInt(dlgDonut.getTxtInner().getText()));
+		 		Donut d =new Donut(new Point(e.getX(),e.getY()), rad, inner,dlgDonut.getBtnDonutBorder().getBackground(),dlgDonut.getBtnDonutInner().getBackground());
+		 		model.add(d);
+		 		frame.repaint();
+		 	}
+		
+		}
+		
+		 if(frame.getTglbtnSelect().isSelected()) {
 	
-	public void shapesAdd(Shape shape) {
-		this.shapes.add(shape);
-		repaint();		
+			 Point point=new Point(e.getX(),e.getY());
+			 shapesSelect(point.getX(),point.getY());
+		//	 tglbtnSelect.setSelected(false);
+				
+
+		 }
+
+		 
+	
+		
 	}
 	
 	public void shapesSelect(int x, int y) {
@@ -55,10 +151,10 @@ public class PnlDrawing extends JPanel {
 		if(counter()==0) {
 			JOptionPane.showMessageDialog(null, "List of shapes is empty!");
 		}
-		for(int i=0;i<shapes.size();i++) {
-			Shape shp=shapes.get(i);
+		for(int i=0;i<model.getShapes().size();i++) {
+			Shape shp=model.getShapes().get(i);
 			shp.setSelected(false);
-			if(shapes.get(i).contains(x, y)) {
+			if(model.getShapes().get(i).contains(x, y)) {
 				shape=shp;	
 				setSelect(false);
 				setSelectModify(false);
@@ -67,8 +163,15 @@ public class PnlDrawing extends JPanel {
 	}
 		if(shape != null)
 			shape.setSelected(true);
-		repaint();
+		frame.repaint();
 		
+	}
+	
+	public int counter() {
+		int i;
+		for(i=0;i<model.getShapes().size();i++);
+			
+		return i;
 	}
 	
 	public void delete() {
@@ -80,19 +183,19 @@ public class PnlDrawing extends JPanel {
 		
 		else
 		setSelect(false);
-		for(int i=0;i<shapes.size();i++) {
+		for(int i=0;i<model.getShapes().size();i++) {
 			
-				if(shapes.get(i).isSelected()) {
+				if(model.getShapes().get(i).isSelected()) {
 					setSelect(true);
 					int selectedOption=JOptionPane.showConfirmDialog(null,"Are you sure you want to delete this shape?", "Warning message", JOptionPane.YES_NO_OPTION);
 					if(selectedOption==JOptionPane.YES_OPTION) {
-					shapes.remove(i);
-					repaint();
+					model.getShapes().remove(i);
+					frame.repaint();
 					//setSelect(true);
 					}
 					else {
-						shapes.get(i).setSelected(false);
-						repaint();
+						model.getShapes().get(i).setSelected(false);
+						frame.repaint();
 						setSelect(true);
 					}
 				}
@@ -104,7 +207,6 @@ public class PnlDrawing extends JPanel {
 		}
 		}
 	
-	
 	public void modify() {
 		if(counter()==0) {
 			JOptionPane.showMessageDialog(null, "List of shapes is empty!");
@@ -112,13 +214,13 @@ public class PnlDrawing extends JPanel {
 		}
 		else
 			setSelectModify(false);
-		for(int i=0;i<shapes.size();i++) {
+		for(int i=0;i<model.getShapes().size();i++) {
 			
-					if(shapes.get(i) instanceof Point) {
+					if(model.getShapes().get(i) instanceof Point) {
 						
-						if(shapes.get(i).isSelected()) {
+						if(model.getShapes().get(i).isSelected()) {
 						DlgPoint dlgPo=new DlgPoint();
-						Point p2=(Point)shapes.get(i);
+						Point p2=(Point)model.getShapes().get(i);
 						dlgPo.getTxtX().setText(Integer.toString(p2.getX()));
 						dlgPo.getTxtY().setText(Integer.toString(p2.getY()));
 						dlgPo.getBtnColorPoint().setBackground(p2.getColor());
@@ -132,23 +234,23 @@ public class PnlDrawing extends JPanel {
 							int cooX=(Integer.parseInt(dlgPo.getTxtX().getText()));
 							int cooY=(Integer.parseInt(dlgPo.getTxtY().getText()));
 							Point p=new Point(cooX,cooY, dlgPo.getBtnColorPoint().getBackground());
-							shapes.remove(i);
-							repaint();
-							shapes.add(p);	
+							model.getShapes().remove(i);
+							frame.repaint();
+							model.getShapes().add(p);	
 							
 						}
 						
 						else {
-							shapes.get(i).setSelected(false);
-							repaint();
+							model.getShapes().get(i).setSelected(false);
+							frame.repaint();
 						}
 					}
 					
 					}
-					else if(shapes.get(i) instanceof Line) {
-						if(shapes.get(i).isSelected()) {
+					else if(model.getShapes().get(i) instanceof Line) {
+						if(model.getShapes().get(i).isSelected()) {
 						DlgLine dlgLi=new DlgLine();
-						Line l=(Line)shapes.get(i);
+						Line l=(Line)model.getShapes().get(i);
 						dlgLi.getTxtSPX().setText(Integer.toString(l.getStartPoint().getX()));
 						dlgLi.getTxtSPY().setText(Integer.toString(l.getStartPoint().getY()));
 						dlgLi.getTxtEPX().setText(Integer.toString(l.getEndPoint().getX()));
@@ -166,22 +268,22 @@ public class PnlDrawing extends JPanel {
 							int eX=(Integer.parseInt(dlgLi.getTxtEPX().getText()));
 							int eY=(Integer.parseInt(dlgLi.getTxtEPY().getText()));
 							Line l2=new Line(new Point(sX,sY), new Point(eX, eY), dlgLi.getBtnColorLine().getBackground());
-							shapes.remove(i);
-							repaint();
-							shapes.add(l2);
+							model.getShapes().remove(i);
+							frame.repaint();
+							model.getShapes().add(l2);
 						}
 						
 						else {
-							shapes.get(i).setSelected(false);
-							repaint();
+							model.getShapes().get(i).setSelected(false);
+							frame.repaint();
 						}
 					}
 						
 					}
-					else if(shapes.get(i) instanceof Rectangle) {
-						if(shapes.get(i).isSelected()) {
+					else if(model.getShapes().get(i) instanceof Rectangle) {
+						if(model.getShapes().get(i).isSelected()) {
 						DlgRectangle dlgRe=new DlgRectangle();
-						Rectangle r1=(Rectangle)shapes.get(i);
+						Rectangle r1=(Rectangle)model.getShapes().get(i);
 						dlgRe.getTxtX().setText(Integer.toString(r1.getUpperLeftPoint().getX()));
 						dlgRe.getTxtY().setText(Integer.toString(r1.getUpperLeftPoint().getY()));
 						dlgRe.getTxtWidth().setText(Integer.toString(r1.getWidth()));
@@ -203,22 +305,22 @@ public class PnlDrawing extends JPanel {
 							Color clr2=dlgRe.getBtnInnerColor().getBackground();
 							
 							Rectangle r2=new Rectangle(new Point(uX, uY), wid, he, clr1, clr2);
-							shapes.remove(i);
-							repaint();
-							shapes.add(r2);
+							model.getShapes().remove(i);
+							frame.repaint();
+							model.getShapes().add(r2);
 						}
 						else {
-							shapes.get(i).setSelected(false);
-							repaint();
+							model.getShapes().get(i).setSelected(false);
+							frame.repaint();
 						}
 						
 					}
 						
 					}
-					else if(shapes.get(i) instanceof Circle==true && shapes.get(i) instanceof Donut ==false) {
-						if(shapes.get(i).isSelected()) {
+					else if(model.getShapes().get(i) instanceof Circle==true && model.getShapes().get(i) instanceof Donut ==false) {
+						if(model.getShapes().get(i).isSelected()) {
 						DlgCircle dlgCir=new DlgCircle();
-						Circle c1=(Circle)shapes.get(i);
+						Circle c1=(Circle)model.getShapes().get(i);
 						dlgCir.getTxtX().setText(Integer.toString(c1.getCenter().getX()));
 						dlgCir.getTxtY().setText(Integer.toString(c1.getCenter().getY()));
 						dlgCir.getTxtRadius().setText(Integer.toString(c1.getRadius()));
@@ -237,23 +339,23 @@ public class PnlDrawing extends JPanel {
 							Color col1=dlgCir.getBtnCircleBorder().getBackground();
 							Color col2=dlgCir.getBtnCircleColorInner().getBackground();
 							Circle c2=new Circle(new Point(xx, yy),ra, col1, col2);
-							shapes.remove(i);
-							repaint();
-							shapes.add(c2);
+							model.getShapes().remove(i);
+							frame.repaint();
+							model.getShapes().add(c2);
 						}
 						else {
-							shapes.get(i).setSelected(false);
-							repaint();
+							model.getShapes().get(i).setSelected(false);
+							frame.repaint();
 						}
 						
 						
 					}
 						
 					}
-					else if(shapes.get(i) instanceof Donut) {
-						if(shapes.get(i).isSelected()) {
+					else if(model.getShapes().get(i) instanceof Donut) {
+						if(model.getShapes().get(i).isSelected()) {
 						DlgDonut dlgDo=new DlgDonut();
-						Donut d1=(Donut) shapes.get(i);
+						Donut d1=(Donut) model.getShapes().get(i);
 						dlgDo.getTxtX().setText(Integer.toString(d1.getCenter().getX()));
 						dlgDo.getTxtY().setText(Integer.toString(d1.getCenter().getY()));
 						dlgDo.getTxtRadius().setText(Integer.toString(d1.getRadius()));
@@ -271,14 +373,14 @@ public class PnlDrawing extends JPanel {
 							int radi=(Integer.parseInt(dlgDo.getTxtRadius().getText()));
 							int in=(Integer.parseInt(dlgDo.getTxtInner().getText()));
 							Donut d2=new Donut(new Point(dX, dY),radi, in, dlgDo.getBtnDonutBorder().getBackground(),dlgDo.getBtnDonutInner().getBackground());
-							shapes.remove(i);
-							repaint();
-							shapes.add(d2);
+							model.getShapes().remove(i);
+							frame.repaint();
+							model.getShapes().add(d2);
 						
 					}
 						else {
-							shapes.get(i).setSelected(false);
-							repaint();
+							model.getShapes().get(i).setSelected(false);
+							frame.repaint();
 						}
 						
 				}
@@ -292,21 +394,6 @@ public class PnlDrawing extends JPanel {
 		setSelectModify(true);
 	}
 }
-		
-	public void paint(Graphics g) {
-		super.paint(g);
-		Iterator<Shape> it=shapes.iterator();
-		while(it.hasNext())
-			it.next().draw(g);		
-		
-	}
-	public int counter() {
-		int i;
-		for(i=0;i<shapes.size();i++);
-			
-		return i;
-	}
-
 
 	public boolean isSelect() {
 		return select;
@@ -326,6 +413,4 @@ public class PnlDrawing extends JPanel {
 	public void setSelectModify(boolean selectModify) {
 		this.selectModify = selectModify;
 	}
-
 }
-
