@@ -9,6 +9,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import adapter.HexagonAdapter;
+import command.AddShapeCmd;
+import command.CommandShape;
+import command.RemoveShapeCmd;
+import command.UpdateLineCmd;
+import command.UpdatePointCmd;
 import drawing.DlgCircle;
 import drawing.DlgDonut;
 import drawing.DlgHexagon;
@@ -27,9 +32,17 @@ public class DrawingController {
 	private boolean select;
     private boolean selectModify;
     private Shape shape;
+    private ArrayList<CommandShape> commands = new ArrayList();
     private Color pointClr;
 	private Point sP;
 	private DrawingModel model;
+	private int num = 0;
+	private AddShapeCmd addShapeCmd;
+	private RemoveShapeCmd removeShapeCmd;
+	private UpdatePointCmd updatePointCmd;
+	private UpdateLineCmd updateLineCmd;
+	private ArrayList<CommandShape> temp = new ArrayList();
+	
 	
 	private DrawingFrame frame;
 	
@@ -45,27 +58,30 @@ public class DrawingController {
 		Shape sh;
 		Point clickPoint=new Point(e.getX(),e.getY());
 		
-		
-		
-			
-		
+
 		if(frame.getTglbtnPoint().isSelected()) {
+			
+			sP=null;
 			sh=new Point(e.getX(),e.getY(), Color.black);
+			addShapeCmd = new AddShapeCmd(model, sh);
 			model.add(sh);
+			commands.add(addShapeCmd);
 			frame.repaint();
 			
 		}
 		
 		if(frame.getTglbtnLine().isSelected()) {
-		
+			
+			
 			if(sP==null) {
 				sP=clickPoint;
 				
 			}
 			else {
 				sh=new Line(sP, new Point(e.getX(), e.getY()), Color.black);
-				
+				addShapeCmd = new AddShapeCmd(model, sh);
 				model.add(sh);
+				commands.add(addShapeCmd);
 				frame.repaint();
 				sP=null;
 				
@@ -73,6 +89,7 @@ public class DrawingController {
 		}
 			
 		if(frame.getTglbtnHexagon().isSelected()) {
+			sP=null;
 			DlgHexagon dlgHexagon = new DlgHexagon();
 			dlgHexagon.getTxtX().setText(Integer.toString(e.getX()));
 			dlgHexagon.getTxtY().setText(Integer.toString(e.getY()));
@@ -85,7 +102,9 @@ public class DrawingController {
 				hex.setBorderColor(dlgHexagon.getBtnBorder().getBackground());
 				hex.setAreaColor(dlgHexagon.getBtnInner().getBackground());
 				sh = new HexagonAdapter(hex);
+				addShapeCmd = new AddShapeCmd(model, sh);
 				model.add(sh);
+				commands.add(addShapeCmd);
 				frame.repaint();
 				
 				
@@ -96,6 +115,7 @@ public class DrawingController {
 		}
 		
 		 if(frame.getTglbtnCircle().isSelected()) {
+			 sP=null;
 			DlgCircle dlgCircle=new DlgCircle();
 			dlgCircle.getTxtX().setText(Integer.toString(e.getX()));
 			dlgCircle.getTxtY().setText(Integer.toString(e.getY()));
@@ -105,7 +125,9 @@ public class DrawingController {
 			
 			if(dlgCircle.isGood()) {
 				Circle c=new Circle(new Point(e.getX(),e.getY()),(Integer.parseInt(dlgCircle.getTxtRadius().getText())), dlgCircle.getBtnCircleBorder().getBackground(), dlgCircle.getBtnCircleColorInner().getBackground());
+				addShapeCmd = new AddShapeCmd(model, c);
 				model.add(c);
+				commands.add(addShapeCmd);
 				frame.repaint();
 			}
 			
@@ -113,6 +135,7 @@ public class DrawingController {
 			
 		}
 		 if(frame.getTglbtnRectangle().isSelected()) {
+			 	sP=null;
 			 	DlgRectangle dlgRec=new DlgRectangle();
 				dlgRec.getTxtX().setText(Integer.toString(e.getX()));
 				dlgRec.getTxtY().setText(Integer.toString(e.getY()));
@@ -126,13 +149,16 @@ public class DrawingController {
 					Color c1=dlgRec.getBtnBorderColor().getBackground();
 					Color c2=dlgRec.getBtnInnerColor().getBackground();
 					Rectangle r=new Rectangle(new Point(e.getX(),e.getY()),w, h, c1, c2);
+					addShapeCmd = new AddShapeCmd(model, r);
 					model.add(r);
+					commands.add(addShapeCmd);
 					frame.repaint();
 				}
 			
 			
 		}
 		 if(frame.getTglbtnDonut().isSelected()) {
+			 sP=null;
 			DlgDonut dlgDonut =new DlgDonut();
 			dlgDonut.getTxtX().setText(Integer.toString(e.getX()));
 			dlgDonut.getTxtY().setText(Integer.toString(e.getY()));
@@ -144,7 +170,9 @@ public class DrawingController {
 		 		int rad=(Integer.parseInt(dlgDonut.getTxtRadius().getText()));
 		 		int inner=(Integer.parseInt(dlgDonut.getTxtInner().getText()));
 		 		Donut d =new Donut(new Point(e.getX(),e.getY()), rad, inner,dlgDonut.getBtnDonutBorder().getBackground(),dlgDonut.getBtnDonutInner().getBackground());
+		 		addShapeCmd = new AddShapeCmd(model, d);
 		 		model.add(d);
+		 		commands.add(addShapeCmd);
 		 		frame.repaint();
 		 	}
 		
@@ -154,7 +182,7 @@ public class DrawingController {
 	
 			 Point point=new Point(e.getX(),e.getY());
 			 shapesSelect(point.getX(),point.getY());
-		//	 tglbtnSelect.setSelected(false);
+			 //tglbtnSelect.setSelected(false);
 				
 
 		 }
@@ -165,6 +193,7 @@ public class DrawingController {
 	}
 	
 	public void shapesSelect(int x, int y) {
+		/*
 		shape=null;
 		if(counter()==0) {
 			JOptionPane.showMessageDialog(null, "List of shapes is empty!");
@@ -181,11 +210,44 @@ public class DrawingController {
 	}
 		if(shape != null)
 			shape.setSelected(true);
+		//frame.repaint();
+		
+		frame.repaint();
+		*/
+		/*                                      SELEKCIJA VISE OBLIKA                       */
+		shape=null;
+		if(counter()==0) {
+			JOptionPane.showMessageDialog(null, "List of shapes is empty!");
+		}
+		for(int i=0;i<model.getShapes().size();i++) {
+			if(model.getShapes().get(i).isSelected()) {
+				
+			}
+			else {
+				Shape shp=model.getShapes().get(i);
+				//shp.setSelected(false);
+			
+			
+			if(model.getShapes().get(i).contains(x, y)) {
+				shape=shp;	
+				//setSelect(false);
+				//setSelectModify(false);
+		}
+			
+			}
+	}
+		if(shape != null) {
+			shape.setSelected(true);
+			
+		}else {
+			for(int i=0;i<model.getShapes().size();i++) {
+				model.getShapes().get(i).setSelected(false);
+			}
+		}
 		frame.repaint();
 		
-		
 	}
-	
+		
 	public int counter() {
 		int i;
 		for(i=0;i<model.getShapes().size();i++);
@@ -206,9 +268,13 @@ public class DrawingController {
 			
 				if(model.getShapes().get(i).isSelected()) {
 					setSelect(true);
+					
 					int selectedOption=JOptionPane.showConfirmDialog(null,"Are you sure you want to delete this shape?", "Warning message", JOptionPane.YES_NO_OPTION);
 					if(selectedOption==JOptionPane.YES_OPTION) {
+					RemoveShapeCmd removeShapeCmd = new RemoveShapeCmd(model,model.getShapes().get(i));
 					model.getShapes().remove(i);
+					commands.add(removeShapeCmd);
+					
 					frame.repaint();
 					//setSelect(true);
 					}
@@ -253,10 +319,15 @@ public class DrawingController {
 							int cooX=(Integer.parseInt(dlgPo.getTxtX().getText()));
 							int cooY=(Integer.parseInt(dlgPo.getTxtY().getText()));
 							Point p=new Point(cooX,cooY, dlgPo.getBtnColorPoint().getBackground());
+							//updatePointCmd = new UpdatePointCmd((Point)model.getShapes().get(i),p);
+							//commands.add(updatePointCmd);
+							//updatePointCmd.execute();
 							model.getShapes().remove(i);
-							frame.repaint();
-							model.getShapes().add(p);	
 							
+							model.getShapes().add(p);
+							
+							p.setSelected(true);
+							frame.repaint();
 						}
 						
 						else {
@@ -287,9 +358,15 @@ public class DrawingController {
 							int eX=(Integer.parseInt(dlgLi.getTxtEPX().getText()));
 							int eY=(Integer.parseInt(dlgLi.getTxtEPY().getText()));
 							Line l2=new Line(new Point(sX,sY), new Point(eX, eY), dlgLi.getBtnColorLine().getBackground());
+							//updateLineCmd = new UpdateLineCmd(l,l2);
+							//commands.add(updateLineCmd);
+							//updateLineCmd.execute();
 							model.getShapes().remove(i);
-							frame.repaint();
+							
 							model.getShapes().add(l2);
+							l2.setSelected(true);
+							frame.repaint();
+							
 						}
 						
 						else {
@@ -325,8 +402,11 @@ public class DrawingController {
 							
 							Rectangle r2=new Rectangle(new Point(uX, uY), wid, he, clr1, clr2);
 							model.getShapes().remove(i);
-							frame.repaint();
+							
 							model.getShapes().add(r2);
+						
+							r2.setSelected(true);
+							frame.repaint();
 						}
 						else {
 							model.getShapes().get(i).setSelected(false);
@@ -359,8 +439,10 @@ public class DrawingController {
 							Color col2=dlgCir.getBtnCircleColorInner().getBackground();
 							Circle c2=new Circle(new Point(xx, yy),ra, col1, col2);
 							model.getShapes().remove(i);
-							frame.repaint();
+							
 							model.getShapes().add(c2);
+							c2.setSelected(true);
+							frame.repaint();
 						}
 						else {
 							model.getShapes().get(i).setSelected(false);
@@ -393,8 +475,11 @@ public class DrawingController {
 							int in=(Integer.parseInt(dlgDo.getTxtInner().getText()));
 							Donut d2=new Donut(new Point(dX, dY),radi, in, dlgDo.getBtnDonutBorder().getBackground(),dlgDo.getBtnDonutInner().getBackground());
 							model.getShapes().remove(i);
-							frame.repaint();
+						
+							
 							model.getShapes().add(d2);
+							d2.setSelected(true);
+							frame.repaint();
 						
 					}
 						else {
@@ -409,6 +494,7 @@ public class DrawingController {
 						if(model.getShapes().get(i).isSelected()) {
 							DlgHexagon dlgHex = new DlgHexagon();
 							HexagonAdapter h1 = (HexagonAdapter) model.getShapes().get(i);
+							
 							dlgHex.getTxtX().setText(Integer.toString(h1.getHexagon().getX()));
 							dlgHex.getTxtY().setText(Integer.toString(h1.getHexagon().getY()));
 							dlgHex.getTxtRadius().setText(Integer.toString(h1.getHexagon().getR()));
@@ -428,8 +514,10 @@ public class DrawingController {
 								
 								HexagonAdapter ha = new HexagonAdapter(h);
 								model.getShapes().remove(i);
-								frame.repaint();
+								
 								model.getShapes().add(ha);
+								ha.setSelected(true);
+								frame.repaint();
 							}
 							else {
 								model.getShapes().get(i).setSelected(false);
@@ -447,7 +535,116 @@ public class DrawingController {
 		setSelectModify(true);
 	}
 }
+	
+	public void undo() {
+		if(commands.size()!=0) {
+			
+				commands.get(commands.size()-1).unexecute();
+				temp.add(commands.get(commands.size()-1));
+				commands.remove(commands.size()-1);
+				frame.repaint();
+			
+	
+		}
+		else {
+			JOptionPane.showMessageDialog(null, "Nema komandi");
+		}
+		
+	}
+	
+	public void redo() {
+		if(temp.size()!=0) {
+		commands.add(temp.get(temp.size()-1));
+		temp.remove(temp.get(temp.size()-1));
+		commands.get(commands.size()-1).execute();
+		
+		frame.repaint();
+		}
+		else {
+			JOptionPane.showMessageDialog(null, "Nema komandi");
+		}
+	}
 
+	public void ToFront() {
+		for(int i=0;i<model.getShapes().size();i++) {
+			
+			if(model.getShapes().get(i).isSelected()) {
+				Shape s = model.getShapes().get(i);
+				model.remove(s);
+				if(i>=model.getShapes().size()) {
+					model.getShapes().add(s);
+					break;
+				}
+				else {
+				model.getShapes().add(i+1, s);
+				break;
+			}
+			
+			
+		}
+		
+	}
+		frame.repaint();
+}
+	
+	public void ToBack() {
+	for(int i=0;i<model.getShapes().size();i++) {
+			
+			if(model.getShapes().get(i).isSelected()) {
+				Shape s = model.getShapes().get(i);
+				model.remove(s);
+				if(i<=1) {
+					model.getShapes().add(0,s);
+					break;
+				}
+				else {
+				model.getShapes().add(i-1, s);
+				break;
+			}
+			
+			
+		}
+		
+	}
+		frame.repaint();
+		
+	}
+	
+	public void BringToFront() {
+		for(int i=0;i<model.getShapes().size();i++) {
+			
+			if(model.getShapes().get(i).isSelected()) {
+				Shape s = model.getShapes().get(i);
+				model.getShapes().remove(i);
+				model.add(s);
+				break;
+			}
+			
+			
+		}
+		//model.getShapes().remove(s);
+		frame.repaint();
+		
+		
+			
+	}
+	
+	public void BringToBack() {
+		
+		for(int i=0;i<model.getShapes().size();i++) {
+			if(model.getShapes().get(i).isSelected()) {
+				Shape s = model.getShapes().get(i);
+				model.remove(s);
+				model.getShapes().add(0, s);
+				break;
+			}
+			
+		}
+		
+		frame.repaint();
+		
+	}
+	
 	public boolean isSelect() {
 		return select;
 	}

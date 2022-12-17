@@ -16,6 +16,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.JButton;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
 
 public class DrawingFrame extends JFrame{
 	private JPanel contentPane;
@@ -36,6 +40,13 @@ public class DrawingFrame extends JFrame{
 	private JToggleButton tglbtnModify;
 	private JToggleButton tglbtnDelete; 
 	private JToggleButton tglbtnHexagon;
+	private JPanel panel;
+	private JButton btnUndo;
+	private JButton btnRedo;
+	private JButton btnToFront;
+	private JButton btnToBack;
+	private JButton btnBringToFront;
+	private JButton btnBringToBack;
 	
 	
 	
@@ -123,6 +134,86 @@ public class DrawingFrame extends JFrame{
 			}
 		});
 		getContentPane().add(view, BorderLayout.CENTER);
+		
+		panel = new JPanel();
+		contentPane.add(panel, BorderLayout.WEST);
+		GridBagLayout gbl_panel = new GridBagLayout();
+		gbl_panel.columnWidths = new int[]{0, 0};
+		gbl_panel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0};
+		gbl_panel.columnWeights = new double[]{0.0, Double.MIN_VALUE};
+		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		panel.setLayout(gbl_panel);
+		
+		btnUndo = new JButton("Undo");
+		btnUndo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				controller.undo();
+			}
+		});
+		GridBagConstraints gbc_btnUndo = new GridBagConstraints();
+		gbc_btnUndo.insets = new Insets(0, 0, 5, 0);
+		gbc_btnUndo.gridx = 0;
+		gbc_btnUndo.gridy = 0;
+		panel.add(btnUndo, gbc_btnUndo);
+		
+		btnRedo = new JButton("Redo");
+		btnRedo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				controller.redo();
+			}
+		});
+		GridBagConstraints gbc_btnRedo = new GridBagConstraints();
+		gbc_btnRedo.insets = new Insets(0, 0, 5, 0);
+		gbc_btnRedo.gridx = 0;
+		gbc_btnRedo.gridy = 1;
+		panel.add(btnRedo, gbc_btnRedo);
+		
+		btnToFront = new JButton("To Front");
+		btnToFront.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				controller.ToFront();
+			}
+		});
+		GridBagConstraints gbc_btnToFront = new GridBagConstraints();
+		gbc_btnToFront.insets = new Insets(0, 0, 5, 0);
+		gbc_btnToFront.gridx = 0;
+		gbc_btnToFront.gridy = 2;
+		panel.add(btnToFront, gbc_btnToFront);
+		
+		btnToBack = new JButton("To Back");
+		btnToBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				controller.ToBack();
+			}
+		});
+		GridBagConstraints gbc_btnToBack = new GridBagConstraints();
+		gbc_btnToBack.insets = new Insets(0, 0, 5, 0);
+		gbc_btnToBack.gridx = 0;
+		gbc_btnToBack.gridy = 3;
+		panel.add(btnToBack, gbc_btnToBack);
+		
+		btnBringToFront = new JButton("Bring To Front");
+		btnBringToFront.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				controller.BringToFront();
+			}
+		});
+		GridBagConstraints gbc_btnBringToFront = new GridBagConstraints();
+		gbc_btnBringToFront.insets = new Insets(0, 0, 5, 0);
+		gbc_btnBringToFront.gridx = 0;
+		gbc_btnBringToFront.gridy = 4;
+		panel.add(btnBringToFront, gbc_btnBringToFront);
+		
+		btnBringToBack = new JButton("Bring To Back");
+		btnBringToBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				controller.BringToBack();
+			}
+		});
+		GridBagConstraints gbc_btnBringToBack = new GridBagConstraints();
+		gbc_btnBringToBack.gridx = 0;
+		gbc_btnBringToBack.gridy = 5;
+		panel.add(btnBringToBack, gbc_btnBringToBack);
 	}
 
 	public ButtonGroup getButtonGroup() {

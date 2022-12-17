@@ -1,5 +1,6 @@
 package adapter;
 
+import java.awt.Color;
 import java.awt.Graphics;
 
 import geometry.Shape;
@@ -13,6 +14,14 @@ public class HexagonAdapter extends Shape{
 	
 	
 
+
+	public Hexagon getHexagon() {
+		return hexagon;
+	}
+
+	public void setHexagon(Hexagon hexagon) {
+		this.hexagon = hexagon;
+	}
 
 	public HexagonAdapter(Hexagon hex) {
 		this.hexagon=hex;
@@ -43,18 +52,12 @@ public class HexagonAdapter extends Shape{
 
 	@Override
 	public void draw(Graphics g) {
-		hexagon.paint(g);
+		this.hexagon.paint(g);
 		
 	}
+	
+	
 
-
-	public Hexagon getHexagon() {
-		return hexagon;
-	}
-
-	public void setHexagon(Hexagon hexagon) {
-		this.hexagon = hexagon;
-	}
 
 	
 
