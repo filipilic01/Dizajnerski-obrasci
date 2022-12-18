@@ -171,7 +171,7 @@ public class DrawingFrame extends JFrame{
 		btnToFront = new JButton("To Front");
 		btnToFront.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				controller.ToFront();
+				controller.toFront();
 			}
 		});
 		GridBagConstraints gbc_btnToFront = new GridBagConstraints();
@@ -183,7 +183,7 @@ public class DrawingFrame extends JFrame{
 		btnToBack = new JButton("To Back");
 		btnToBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				controller.ToBack();
+				controller.toBack();
 			}
 		});
 		GridBagConstraints gbc_btnToBack = new GridBagConstraints();
@@ -195,7 +195,7 @@ public class DrawingFrame extends JFrame{
 		btnBringToFront = new JButton("Bring To Front");
 		btnBringToFront.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				controller.BringToFront();
+				controller.bringToFront();
 			}
 		});
 		GridBagConstraints gbc_btnBringToFront = new GridBagConstraints();
@@ -207,7 +207,7 @@ public class DrawingFrame extends JFrame{
 		btnBringToBack = new JButton("Bring To Back");
 		btnBringToBack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				controller.BringToBack();
+				controller.bringToBack();
 			}
 		});
 		GridBagConstraints gbc_btnBringToBack = new GridBagConstraints();

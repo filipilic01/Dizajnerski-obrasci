@@ -1,6 +1,9 @@
 package geometry;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.geom.Area;
+import java.awt.geom.Ellipse2D;
 import java.awt.Color;
 
 public class Donut extends Circle{
@@ -79,10 +82,19 @@ public class Donut extends Circle{
 	}
 	
 	public void fill(Graphics g) {
+		Ellipse2D eIner=new Ellipse2D.Float(center.getX()-innerRadius,center.getY()- innerRadius,2* innerRadius,2* innerRadius);
+		Ellipse2D eOuter=new Ellipse2D.Float(center.getX()-getRadius(),center.getY()- getRadius(),2* getRadius(),2* getRadius());
+		Area outer=new Area(eOuter);
+		Area iner=new Area(eIner);
+		outer.subtract(iner);
+		
+		//g.setColor(getInnerColor());
+		((Graphics2D) g).fill(outer);
+		
 		g.setColor(getColorInner());
-		super.fill(g);
+		/*super.fill(g);
 	    g.setColor(Color.white);
-		g.fillOval(center.getX()-innerRadius+1, center.getY()-innerRadius+1, innerRadius*2-1, innerRadius*2-1);
+		g.fillOval(center.getX()-innerRadius+1, center.getY()-innerRadius+1, innerRadius*2-1, innerRadius*2-1);*/
 	}
 
 	public int compareTo(Object o) {

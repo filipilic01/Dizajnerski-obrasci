@@ -565,7 +565,7 @@ public class DrawingController {
 		}
 	}
 
-	public void ToFront() {
+	public void toFront() {
 		for(int i=0;i<model.getShapes().size();i++) {
 			
 			if(model.getShapes().get(i).isSelected()) {
@@ -587,7 +587,7 @@ public class DrawingController {
 		frame.repaint();
 }
 	
-	public void ToBack() {
+	public void toBack() {
 	for(int i=0;i<model.getShapes().size();i++) {
 			
 			if(model.getShapes().get(i).isSelected()) {
@@ -610,7 +610,7 @@ public class DrawingController {
 		
 	}
 	
-	public void BringToFront() {
+	public void bringToFront() {
 		for(int i=0;i<model.getShapes().size();i++) {
 			
 			if(model.getShapes().get(i).isSelected()) {
@@ -629,7 +629,7 @@ public class DrawingController {
 			
 	}
 	
-	public void BringToBack() {
+	public void bringToBack() {
 		
 		for(int i=0;i<model.getShapes().size();i++) {
 			if(model.getShapes().get(i).isSelected()) {

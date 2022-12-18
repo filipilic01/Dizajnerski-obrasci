@@ -2,7 +2,7 @@ package command;
 
 import geometry.Circle;
 
-public class UpdateCircleCmd {
+public class UpdateCircleCmd extends CommandShape{
 
 	private Circle oldCircle;
 	private Circle newCircle;
@@ -16,11 +16,33 @@ public class UpdateCircleCmd {
 	public void execute(){
 		original.getCenter().setX(oldCircle.getCenter().getX());
 		original.getCenter().setY(oldCircle.getCenter().getY());
-		//original.setRadius(oldCircle.getRadius());
+		try {
+			original.setRadius(oldCircle.getRadius());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		oldCircle.getCenter().setX(newCircle.getCenter().getX());
 		oldCircle.getCenter().setY(newCircle.getCenter().getY());
-		//oldCircle.setRadius(newCircle.getRadius());
+		try {
+			oldCircle.setRadius(newCircle.getRadius());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void unexecute() {
+		oldCircle.getCenter().setX(original.getCenter().getX());
+		oldCircle.getCenter().setY(original.getCenter().getY());
+		try {
+			oldCircle.setRadius(original.getRadius());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 }
