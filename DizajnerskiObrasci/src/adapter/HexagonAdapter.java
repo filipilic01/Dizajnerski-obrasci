@@ -11,10 +11,6 @@ public class HexagonAdapter extends Shape{
 	
 	private Hexagon hexagon;
 	
-	
-	
-
-
 	public Hexagon getHexagon() {
 		return hexagon;
 	}

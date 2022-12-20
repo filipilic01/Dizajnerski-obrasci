@@ -41,6 +41,7 @@ public class DrawingController {
 	private RemoveShapeCmd removeShapeCmd;
 	private UpdatePointCmd updatePointCmd;
 	private UpdateLineCmd updateLineCmd;
+	private int numOfSelectedShapes=0;
 	private ArrayList<CommandShape> temp = new ArrayList();
 	
 	
@@ -215,10 +216,18 @@ public class DrawingController {
 		frame.repaint();
 		*/
 		/*                                      SELEKCIJA VISE OBLIKA                       */
+		int counter= 0;
 		shape=null;
 		if(counter()==0) {
 			JOptionPane.showMessageDialog(null, "List of shapes is empty!");
 		}
+	/*	for(int i =0; i<model.getShapes().size();i++) {
+			if(model.getShapes().get(i).contains(x, y)) {
+				model.getShapes().get(i).setSelected(false);
+				
+			}
+				
+		}*/
 		for(int i=0;i<model.getShapes().size();i++) {
 			if(model.getShapes().get(i).isSelected()) {
 				
@@ -230,22 +239,65 @@ public class DrawingController {
 			
 			if(model.getShapes().get(i).contains(x, y)) {
 				shape=shp;	
-				//setSelect(false);
-				//setSelectModify(false);
+				setSelect(false);
+				setSelectModify(false);
 		}
 			
 			}
 	}
 		if(shape != null) {
 			shape.setSelected(true);
+			numOfSelectedShapes++;
+			frame.repaint();
 			
-		}else {
-			for(int i=0;i<model.getShapes().size();i++) {
-				model.getShapes().get(i).setSelected(false);
-			}
 		}
-		frame.repaint();
+		else {
+			for(int i=0;i<model.getShapes().size();i++) 
+			{
+				if(model.getShapes().get(i).isSelected()) {
+					
+				
+				if(model.getShapes().get(i).contains(x, y)) {
+					model.getShapes().get(i).setSelected(false);
+					numOfSelectedShapes--;
+					frame.repaint();
+					break;
+				}
+				else {
+					counter++;
+					//deselectAll();
+					//break;
+				}
+			}
+				else {
+					counter++;
+				}
+			}
+			}
+			//shape.setSelected(false);
+			/*for(int i=0;i<model.getShapes().size();i++) {
+				if(model.getShapes().get(i).contains(x, y))
+				model.getShapes().get(i).setSelected(false);
+				else
+					break;
+			}*/
+			
+			
 		
+		//frame.repaint();
+		if(counter==model.getShapes().size()) {
+			deselectAll();
+		}
+		
+	}
+	
+	public void deselectAll() {
+		for(int i = 0;i<model.getShapes().size();i++) {
+			model.getShapes().get(i).setSelected(false);
+			
+		}
+		numOfSelectedShapes=0;
+		frame.repaint();
 	}
 		
 	public int counter() {
@@ -262,8 +314,9 @@ public class DrawingController {
 			setSelect(true);
 		}
 		
-		else
+		else {
 		setSelect(false);
+		if(numOfSelectedShapes==1) {
 		for(int i=0;i<model.getShapes().size();i++) {
 			
 				if(model.getShapes().get(i).isSelected()) {
@@ -274,18 +327,56 @@ public class DrawingController {
 					RemoveShapeCmd removeShapeCmd = new RemoveShapeCmd(model,model.getShapes().get(i));
 					model.getShapes().remove(i);
 					commands.add(removeShapeCmd);
-					
+					numOfSelectedShapes--;
 					frame.repaint();
-					//setSelect(true);
+					setSelect(true);
 					}
 					else {
 						model.getShapes().get(i).setSelected(false);
+						numOfSelectedShapes=0;
 						frame.repaint();
 						setSelect(true);
 					}
 				}
 				
 		}
+		}
+		else if(numOfSelectedShapes ==0) {
+			JOptionPane.showMessageDialog(null, "Please, select the shape!");
+			setSelect(true);
+		}
+		else {
+			ArrayList<Shape> temp = new ArrayList();
+			int option =JOptionPane.showConfirmDialog(null, "Are you sure you want to delete all of selected shapes?", "Warning message", JOptionPane.YES_NO_OPTION);
+			if(option==JOptionPane.YES_OPTION) {
+				for(int i=0;i<model.getShapes().size();i++) {
+					if(!model.getShapes().get(i).isSelected()){
+						//model.getShapes().remove(i);
+						//frame.repaint();
+						temp.add(model.getShapes().get(i));
+					}
+				}
+				model.getShapes().clear();
+			
+				for(int i=0;i<temp.size();i++) {
+					model.getShapes().add(temp.get(i));
+					
+				}
+				numOfSelectedShapes=0;
+				frame.repaint();
+				setSelect(true);
+			}
+			else {
+				for(int i=0;i<model.getShapes().size();i++) {
+					model.getShapes().get(i).setSelected(false);
+				}
+				numOfSelectedShapes=0;
+				frame.repaint();
+				setSelect(true);
+			}
+		}
+		}
+		//frame.repaint();
 		if(isSelect()==false) {
 			JOptionPane.showMessageDialog(null, "Please, select the shape!");
 			setSelect(true);
