@@ -3,7 +3,7 @@ package command;
 import geometry.Shape;
 import mvc.DrawingModel;
 
-public class RemoveShapeCmd extends CommandShape{
+public class RemoveShapeCmd implements CommandShape{
 	private DrawingModel model;
 	private Shape shape;
 

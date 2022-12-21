@@ -2,7 +2,7 @@ package command;
 
 import geometry.Point;
 
-public class UpdatePointCmd extends CommandShape{
+public class UpdatePointCmd implements CommandShape{
 
 	private Point oldPoint;
 	private Point newPoint;

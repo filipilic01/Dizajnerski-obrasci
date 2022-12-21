@@ -2,7 +2,7 @@ package command;
 
 import geometry.Rectangle;
 
-public class UpdateRectangleCmd extends CommandShape{
+public class UpdateRectangleCmd implements CommandShape{
 
 	private Rectangle oldRectangle;
 	private Rectangle newRectangle;

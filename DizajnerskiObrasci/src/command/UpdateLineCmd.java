@@ -2,7 +2,7 @@ package command;
 
 import geometry.Line;
 
-public class UpdateLineCmd extends CommandShape{
+public class UpdateLineCmd implements CommandShape{
 	
 	private Line oldLine;
 	private Line newLine;

@@ -2,7 +2,7 @@ package command;
 
 import geometry.Donut;
 
-public class UpdateDonutCmd extends CommandShape{
+public class UpdateDonutCmd implements CommandShape{
 
 	private Donut oldDonut;
 	private Donut newDonut;

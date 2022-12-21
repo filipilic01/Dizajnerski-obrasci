@@ -1,7 +1,7 @@
 package command;
 
-public abstract class CommandShape {
+public interface CommandShape {
 
-	public abstract void execute();
-	public abstract void unexecute();
+	void execute();
+	 void unexecute();
 }

@@ -3,7 +3,7 @@ package command;
 import adapter.HexagonAdapter;
 import hexagon.Hexagon;
 
-public class UpdateHexagonCmd extends CommandShape{
+public class UpdateHexagonCmd implements CommandShape{
 
 	private HexagonAdapter oldHexagon;
 	private HexagonAdapter newHexagon;

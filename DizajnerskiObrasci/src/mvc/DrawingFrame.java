@@ -216,6 +216,22 @@ public class DrawingFrame extends JFrame{
 		panel.add(btnBringToBack, gbc_btnBringToBack);
 	}
 
+	public JButton getBtnUndo() {
+		return btnUndo;
+	}
+
+	public void setBtnUndo(JButton btnUndo) {
+		this.btnUndo = btnUndo;
+	}
+
+	public JButton getBtnRedo() {
+		return btnRedo;
+	}
+
+	public void setBtnRedo(JButton btnRedo) {
+		this.btnRedo = btnRedo;
+	}
+
 	public ButtonGroup getButtonGroup() {
 		return buttonGroup;
 	}

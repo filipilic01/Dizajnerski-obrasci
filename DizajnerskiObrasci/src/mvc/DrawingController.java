@@ -27,6 +27,8 @@ import geometry.Point;
 import geometry.Rectangle;
 import geometry.Shape;
 import hexagon.Hexagon;
+import observer.Observable;
+import observer.Observer;
 
 public class DrawingController {
 	private boolean select;
@@ -43,7 +45,9 @@ public class DrawingController {
 	private UpdateLineCmd updateLineCmd;
 	private int numOfSelectedShapes=0;
 	private ArrayList<CommandShape> temp = new ArrayList();
-	
+	private ArrayList<Shape> selectedShapes = new ArrayList();
+	private Observer observer;
+	private Observable observable;
 	
 	private DrawingFrame frame;
 	
@@ -55,6 +59,7 @@ public class DrawingController {
 	
 
 	public void mouseClicked(MouseEvent e) {
+		
 
 		Shape sh;
 		Point clickPoint=new Point(e.getX(),e.getY());
@@ -247,7 +252,8 @@ public class DrawingController {
 	}
 		if(shape != null) {
 			shape.setSelected(true);
-			numOfSelectedShapes++;
+			//numOfSelectedShapes++;
+			selectedShapes.add(shape);
 			frame.repaint();
 			
 		}
@@ -259,7 +265,8 @@ public class DrawingController {
 				
 				if(model.getShapes().get(i).contains(x, y)) {
 					model.getShapes().get(i).setSelected(false);
-					numOfSelectedShapes--;
+					//numOfSelectedShapes--;
+					selectedShapes.remove(model.getShapes().get(i));
 					frame.repaint();
 					break;
 				}
@@ -296,7 +303,8 @@ public class DrawingController {
 			model.getShapes().get(i).setSelected(false);
 			
 		}
-		numOfSelectedShapes=0;
+		//numOfSelectedShapes=0;
+		selectedShapes.clear();
 		frame.repaint();
 	}
 		
@@ -316,7 +324,7 @@ public class DrawingController {
 		
 		else {
 		setSelect(false);
-		if(numOfSelectedShapes==1) {
+		if(selectedShapes.size()==1) {
 		for(int i=0;i<model.getShapes().size();i++) {
 			
 				if(model.getShapes().get(i).isSelected()) {
@@ -325,15 +333,17 @@ public class DrawingController {
 					int selectedOption=JOptionPane.showConfirmDialog(null,"Are you sure you want to delete this shape?", "Warning message", JOptionPane.YES_NO_OPTION);
 					if(selectedOption==JOptionPane.YES_OPTION) {
 					RemoveShapeCmd removeShapeCmd = new RemoveShapeCmd(model,model.getShapes().get(i));
+					selectedShapes.remove(model.getShapes().get(i));
 					model.getShapes().remove(i);
 					commands.add(removeShapeCmd);
-					numOfSelectedShapes--;
+					//numOfSelectedShapes--;
 					frame.repaint();
 					setSelect(true);
 					}
 					else {
 						model.getShapes().get(i).setSelected(false);
-						numOfSelectedShapes=0;
+						//numOfSelectedShapes=0;
+						selectedShapes.clear();
 						frame.repaint();
 						setSelect(true);
 					}
@@ -341,7 +351,7 @@ public class DrawingController {
 				
 		}
 		}
-		else if(numOfSelectedShapes ==0) {
+		else if(selectedShapes.size() ==0) {
 			JOptionPane.showMessageDialog(null, "Please, select the shape!");
 			setSelect(true);
 		}
@@ -362,7 +372,8 @@ public class DrawingController {
 					model.getShapes().add(temp.get(i));
 					
 				}
-				numOfSelectedShapes=0;
+				//numOfSelectedShapes=0;
+				selectedShapes.clear();
 				frame.repaint();
 				setSelect(true);
 			}
@@ -370,7 +381,8 @@ public class DrawingController {
 				for(int i=0;i<model.getShapes().size();i++) {
 					model.getShapes().get(i).setSelected(false);
 				}
-				numOfSelectedShapes=0;
+				//numOfSelectedShapes=0;
+				selectedShapes.clear();
 				frame.repaint();
 				setSelect(true);
 			}
@@ -639,6 +651,7 @@ public class DrawingController {
 		}
 		else {
 			JOptionPane.showMessageDialog(null, "Nema komandi");
+			//frame.getBtnUndo().setEnabled(false);
 		}
 		
 	}
@@ -653,6 +666,7 @@ public class DrawingController {
 		}
 		else {
 			JOptionPane.showMessageDialog(null, "Nema komandi");
+			//frame.getBtnRedo().setEnabled(false);
 		}
 	}
 

@@ -2,7 +2,7 @@ package command;
 
 import geometry.Circle;
 
-public class UpdateCircleCmd extends CommandShape{
+public class UpdateCircleCmd implements CommandShape{
 
 	private Circle oldCircle;
 	private Circle newCircle;
