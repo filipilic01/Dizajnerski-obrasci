@@ -128,7 +128,7 @@ public class DlgHexagon extends JDialog {
 			contentPanel.add(txtRadius, gbc_txtRadius);
 			txtRadius.setColumns(10);
 		}
-		{
+		/*{
 			btnBorder = new JButton("Border color");
 			btnBorder.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
@@ -157,7 +157,7 @@ public class DlgHexagon extends JDialog {
 			gbc_btnInner.gridx = 10;
 			gbc_btnInner.gridy = 7;
 			contentPanel.add(btnInner, gbc_btnInner);
-		}
+		}*/
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));

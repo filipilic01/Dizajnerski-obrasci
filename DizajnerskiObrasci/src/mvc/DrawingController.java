@@ -5,6 +5,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JColorChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
@@ -35,7 +36,6 @@ public class DrawingController {
     private boolean selectModify;
     private Shape shape;
     private ArrayList<CommandShape> commands = new ArrayList();
-    private Color pointClr;
 	private Point sP;
 	private DrawingModel model;
 	private int num = 0;
@@ -48,6 +48,8 @@ public class DrawingController {
 	private ArrayList<Shape> selectedShapes = new ArrayList();
 	private Observer observer;
 	private Observable observable;
+	private Color border;
+	private Color inner;
 	
 	private DrawingFrame frame;
 	
@@ -58,6 +60,22 @@ public class DrawingController {
 
 	
 
+	public void colorTheBorder() {
+		border = JColorChooser.showDialog(null, "Choose a color!", border);
+		frame.getBtnBorder().getBackground();
+		if(border!=null) {
+			frame.getBtnBorder().setBackground(border);
+		}
+	}
+	
+	public void colorTheInner() {
+		inner = JColorChooser.showDialog(null, "Choose a color!", inner);
+		frame.getBtnInner().getBackground();
+		if(inner!=null) {
+			frame.getBtnInner().setBackground(inner);
+		}
+	}
+	
 	public void mouseClicked(MouseEvent e) {
 		
 
@@ -68,7 +86,7 @@ public class DrawingController {
 		if(frame.getTglbtnPoint().isSelected()) {
 			
 			sP=null;
-			sh=new Point(e.getX(),e.getY(), Color.black);
+			sh=new Point(e.getX(),e.getY(), frame.getBtnBorder().getBackground());
 			addShapeCmd = new AddShapeCmd(model, sh);
 			model.add(sh);
 			commands.add(addShapeCmd);
@@ -84,7 +102,7 @@ public class DrawingController {
 				
 			}
 			else {
-				sh=new Line(sP, new Point(e.getX(), e.getY()), Color.black);
+				sh=new Line(sP, new Point(e.getX(), e.getY()), frame.getBtnBorder().getBackground());
 				addShapeCmd = new AddShapeCmd(model, sh);
 				model.add(sh);
 				commands.add(addShapeCmd);
@@ -105,8 +123,8 @@ public class DrawingController {
 			
 			if(dlgHexagon.isGood()) {
 				Hexagon hex = new Hexagon(e.getX(),e.getY(),Integer.parseInt(dlgHexagon.getTxtRadius().getText()));
-				hex.setBorderColor(dlgHexagon.getBtnBorder().getBackground());
-				hex.setAreaColor(dlgHexagon.getBtnInner().getBackground());
+				hex.setBorderColor(frame.getBtnBorder().getBackground());
+				hex.setAreaColor(frame.getBtnInner().getBackground());
 				sh = new HexagonAdapter(hex);
 				addShapeCmd = new AddShapeCmd(model, sh);
 				model.add(sh);
@@ -130,7 +148,7 @@ public class DrawingController {
 			dlgCircle.setVisible(true);
 			
 			if(dlgCircle.isGood()) {
-				Circle c=new Circle(new Point(e.getX(),e.getY()),(Integer.parseInt(dlgCircle.getTxtRadius().getText())), dlgCircle.getBtnCircleBorder().getBackground(), dlgCircle.getBtnCircleColorInner().getBackground());
+				Circle c=new Circle(new Point(e.getX(),e.getY()),(Integer.parseInt(dlgCircle.getTxtRadius().getText())), frame.getBtnBorder().getBackground(), frame.getBtnInner().getBackground());
 				addShapeCmd = new AddShapeCmd(model, c);
 				model.add(c);
 				commands.add(addShapeCmd);
@@ -152,8 +170,8 @@ public class DrawingController {
 				if (dlgRec.isOkk()){
 					int w=(Integer.parseInt(dlgRec.getTxtWidth().getText()));
 					int h=(Integer.parseInt(dlgRec.getTxtHeight().getText()));
-					Color c1=dlgRec.getBtnBorderColor().getBackground();
-					Color c2=dlgRec.getBtnInnerColor().getBackground();
+					Color c1=frame.getBtnBorder().getBackground();
+					Color c2=frame.getBtnInner().getBackground();
 					Rectangle r=new Rectangle(new Point(e.getX(),e.getY()),w, h, c1, c2);
 					addShapeCmd = new AddShapeCmd(model, r);
 					model.add(r);
@@ -175,7 +193,7 @@ public class DrawingController {
 		 	if(dlgDonut.isOkkk()) {
 		 		int rad=(Integer.parseInt(dlgDonut.getTxtRadius().getText()));
 		 		int inner=(Integer.parseInt(dlgDonut.getTxtInner().getText()));
-		 		Donut d =new Donut(new Point(e.getX(),e.getY()), rad, inner,dlgDonut.getBtnDonutBorder().getBackground(),dlgDonut.getBtnDonutInner().getBackground());
+		 		Donut d =new Donut(new Point(e.getX(),e.getY()), rad, inner,frame.getBtnBorder().getBackground(), frame.getBtnInner().getBackground());
 		 		addShapeCmd = new AddShapeCmd(model, d);
 		 		model.add(d);
 		 		commands.add(addShapeCmd);
@@ -189,13 +207,9 @@ public class DrawingController {
 			 Point point=new Point(e.getX(),e.getY());
 			 shapesSelect(point.getX(),point.getY());
 			 //tglbtnSelect.setSelected(false);
-				
 
 		 }
 
-		 
-	
-		
 	}
 	
 	public void shapesSelect(int x, int y) {
@@ -411,7 +425,7 @@ public class DrawingController {
 						Point p2=(Point)model.getShapes().get(i);
 						dlgPo.getTxtX().setText(Integer.toString(p2.getX()));
 						dlgPo.getTxtY().setText(Integer.toString(p2.getY()));
-						dlgPo.getBtnColorPoint().setBackground(p2.getColor());
+						//dlgPo.getBtnColorPoint().setBackground(p2.getColor());
 						dlgPo.setVisible(true);
 						setSelectModify(true);
 						//shapes.remove(i);
@@ -421,7 +435,7 @@ public class DrawingController {
 						if(dlgPo.isOok()) {
 							int cooX=(Integer.parseInt(dlgPo.getTxtX().getText()));
 							int cooY=(Integer.parseInt(dlgPo.getTxtY().getText()));
-							Point p=new Point(cooX,cooY, dlgPo.getBtnColorPoint().getBackground());
+							Point p=new Point(cooX,cooY, frame.getBtnBorder().getBackground());
 							//updatePointCmd = new UpdatePointCmd((Point)model.getShapes().get(i),p);
 							//commands.add(updatePointCmd);
 							//updatePointCmd.execute();
@@ -448,7 +462,7 @@ public class DrawingController {
 						dlgLi.getTxtSPY().setText(Integer.toString(l.getStartPoint().getY()));
 						dlgLi.getTxtEPX().setText(Integer.toString(l.getEndPoint().getX()));
 						dlgLi.getTxtEPY().setText(Integer.toString(l.getEndPoint().getY()));
-						dlgLi.getBtnColorLine().setBackground(l.getColor());
+						//dlgLi.getBtnColorLine().setBackground(l.getColor());
 						dlgLi.setVisible(true);
 						setSelectModify(true);
 						//shapes.remove(i);
@@ -460,7 +474,7 @@ public class DrawingController {
 							int sY=(Integer.parseInt(dlgLi.getTxtSPY().getText()));
 							int eX=(Integer.parseInt(dlgLi.getTxtEPX().getText()));
 							int eY=(Integer.parseInt(dlgLi.getTxtEPY().getText()));
-							Line l2=new Line(new Point(sX,sY), new Point(eX, eY), dlgLi.getBtnColorLine().getBackground());
+							Line l2=new Line(new Point(sX,sY), new Point(eX, eY), frame.getBtnBorder().getBackground());
 							//updateLineCmd = new UpdateLineCmd(l,l2);
 							//commands.add(updateLineCmd);
 							//updateLineCmd.execute();
@@ -487,8 +501,8 @@ public class DrawingController {
 						dlgRe.getTxtY().setText(Integer.toString(r1.getUpperLeftPoint().getY()));
 						dlgRe.getTxtWidth().setText(Integer.toString(r1.getWidth()));
 						dlgRe.getTxtHeight().setText(Integer.toString(r1.getHeight()));
-						dlgRe.getBtnBorderColor().setBackground(r1.getColor());
-						dlgRe.getBtnInnerColor().setBackground(r1.getColorInner());
+						//dlgRe.getBtnBorderColor().setBackground(r1.getColor());
+						//dlgRe.getBtnInnerColor().setBackground(r1.getColorInner());
 						dlgRe.setVisible(true);
 						setSelectModify(true);
 						//shapes.remove(i);
@@ -500,8 +514,8 @@ public class DrawingController {
 							int uY=(Integer.parseInt(dlgRe.getTxtY().getText()));
 							int wid=(Integer.parseInt(dlgRe.getTxtWidth().getText()));
 							int he=(Integer.parseInt(dlgRe.getTxtHeight().getText()));
-							Color clr1= dlgRe.getBtnBorderColor().getBackground();
-							Color clr2=dlgRe.getBtnInnerColor().getBackground();
+							Color clr1= frame.getBtnBorder().getBackground();
+							Color clr2=frame.getBtnInner().getBackground();
 							
 							Rectangle r2=new Rectangle(new Point(uX, uY), wid, he, clr1, clr2);
 							model.getShapes().remove(i);
@@ -526,8 +540,8 @@ public class DrawingController {
 						dlgCir.getTxtX().setText(Integer.toString(c1.getCenter().getX()));
 						dlgCir.getTxtY().setText(Integer.toString(c1.getCenter().getY()));
 						dlgCir.getTxtRadius().setText(Integer.toString(c1.getRadius()));
-						dlgCir.getBtnCircleBorder().setBackground(c1.getColor());
-						dlgCir.getBtnCircleColorInner().setBackground(c1.getColorInner());
+						//dlgCir.getBtnCircleBorder().setBackground(c1.getColor());
+						//dlgCir.getBtnCircleColorInner().setBackground(c1.getColorInner());
 						dlgCir.setVisible(true);
 						setSelectModify(true);
 						//shapes.remove(i);
@@ -538,8 +552,8 @@ public class DrawingController {
 							int xx=(Integer.parseInt(dlgCir.getTxtX().getText()));
 							int yy=(Integer.parseInt(dlgCir.getTxtY().getText()));
 							int ra=(Integer.parseInt(dlgCir.getTxtRadius().getText()));
-							Color col1=dlgCir.getBtnCircleBorder().getBackground();
-							Color col2=dlgCir.getBtnCircleColorInner().getBackground();
+							Color col1=frame.getBtnBorder().getBackground();
+							Color col2=frame.getBtnInner().getBackground();
 							Circle c2=new Circle(new Point(xx, yy),ra, col1, col2);
 							model.getShapes().remove(i);
 							
@@ -564,8 +578,8 @@ public class DrawingController {
 						dlgDo.getTxtY().setText(Integer.toString(d1.getCenter().getY()));
 						dlgDo.getTxtRadius().setText(Integer.toString(d1.getRadius()));
 						dlgDo.getTxtInner().setText(Integer.toString(d1.getInnerRadius()));
-						dlgDo.getBtnDonutBorder().setBackground(d1.getColor());
-						dlgDo.getBtnDonutInner().setBackground(d1.getColorInner());
+						//dlgDo.getBtnDonutBorder().setBackground(d1.getColor());
+						//dlgDo.getBtnDonutInner().setBackground(d1.getColorInner());
 						dlgDo.setVisible(true);
 						setSelectModify(true);
 						//shapes.remove(i);
@@ -576,7 +590,7 @@ public class DrawingController {
 							int dY=(Integer.parseInt(dlgDo.getTxtY().getText()));
 							int radi=(Integer.parseInt(dlgDo.getTxtRadius().getText()));
 							int in=(Integer.parseInt(dlgDo.getTxtInner().getText()));
-							Donut d2=new Donut(new Point(dX, dY),radi, in, dlgDo.getBtnDonutBorder().getBackground(),dlgDo.getBtnDonutInner().getBackground());
+							Donut d2=new Donut(new Point(dX, dY),radi, in, frame.getBtnBorder().getBackground(),frame.getBtnInner().getBackground());
 							model.getShapes().remove(i);
 						
 							
@@ -601,8 +615,8 @@ public class DrawingController {
 							dlgHex.getTxtX().setText(Integer.toString(h1.getHexagon().getX()));
 							dlgHex.getTxtY().setText(Integer.toString(h1.getHexagon().getY()));
 							dlgHex.getTxtRadius().setText(Integer.toString(h1.getHexagon().getR()));
-							dlgHex.getBtnBorder().setBackground(h1.getHexagon().getBorderColor());
-							dlgHex.getBtnInner().setBackground(h1.getHexagon().getAreaColor());
+							//dlgHex.getBtnBorder().setBackground(h1.getHexagon().getBorderColor());
+							//dlgHex.getBtnInner().setBackground(h1.getHexagon().getAreaColor());
 							dlgHex.setVisible(true);
 							setSelectModify(true);
 							
@@ -612,8 +626,8 @@ public class DrawingController {
 								int r = (Integer.parseInt(dlgHex.getTxtRadius().getText()));
 								
 								Hexagon h = new Hexagon(dX,dY,r);
-								h.setBorderColor(dlgHex.getBtnBorder().getBackground());
-								h.setAreaColor(dlgHex.getBtnInner().getBackground());
+								h.setBorderColor(frame.getBtnBorder().getBackground());
+								h.setAreaColor(frame.getBtnInner().getBackground());
 								
 								HexagonAdapter ha = new HexagonAdapter(h);
 								model.getShapes().remove(i);
@@ -749,6 +763,8 @@ public class DrawingController {
 		frame.repaint();
 		
 	}
+	
+	
 	
 	public boolean isSelect() {
 		return select;

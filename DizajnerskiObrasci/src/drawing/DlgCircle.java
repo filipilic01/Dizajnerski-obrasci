@@ -30,6 +30,7 @@ public class DlgCircle extends JDialog {
 	private boolean cancelCircle;
 	private JButton btnCircleBorder;
 	private JButton btnCircleColorInner;
+	
 	Color out=null;
 	Color in=null;
 
@@ -152,8 +153,9 @@ public class DlgCircle extends JDialog {
 			contentPanel.add(txtRadius, gbc_txtRadius);
 			txtRadius.setColumns(10);
 		}
-		{
+		/*{
 		    btnCircleBorder = new JButton("Border color");
+		    
 			btnCircleBorder.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					 out=JColorChooser.showDialog(null, "Choose a border color!", btnCircleBorder.getBackground());
@@ -182,7 +184,7 @@ public class DlgCircle extends JDialog {
 			gbc_btnCircleColorInner.gridx = 2;
 			gbc_btnCircleColorInner.gridy = 6;
 			contentPanel.add(btnCircleColorInner, gbc_btnCircleColorInner);
-		}
+		}*/
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));

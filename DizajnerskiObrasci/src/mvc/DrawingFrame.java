@@ -1,6 +1,8 @@
 package mvc;
 
 import javax.swing.ButtonGroup;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
@@ -47,9 +49,27 @@ public class DrawingFrame extends JFrame{
 	private JButton btnToBack;
 	private JButton btnBringToFront;
 	private JButton btnBringToBack;
+	private JButton btnBorder;
+	private JButton btnInner;
 	
 	
 	
+	public JButton getBtnBorder() {
+		return btnBorder;
+	}
+
+	public void setBtnBorder(JButton btnBorder) {
+		this.btnBorder = btnBorder;
+	}
+
+	public JButton getBtnInner() {
+		return btnInner;
+	}
+
+	public void setBtnInner(JButton btnInner) {
+		this.btnInner = btnInner;
+	}
+
 	public JToggleButton getTglbtnHexagon() {
 		return tglbtnHexagon;
 	}
@@ -59,7 +79,7 @@ public class DrawingFrame extends JFrame{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("IT 7/2020 Ilic Filip");
 		
-		setBounds(100, 100, 550, 400);
+		setBounds(100, 100, 900, 600);
 		contentPane = new JPanel();
 	
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -67,6 +87,7 @@ public class DrawingFrame extends JFrame{
 		setContentPane(contentPane);
 		
 		JPanel pnlNorth = new JPanel();
+		
 		contentPane.add(pnlNorth, BorderLayout.NORTH);
 		
 		tglbtnPoint = new JToggleButton("Point");
@@ -127,6 +148,7 @@ public class DrawingFrame extends JFrame{
 		
 		
 		contentPane.setBackground(Color.white);
+		view.setBackground(Color.WHITE);
 		view.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -139,12 +161,15 @@ public class DrawingFrame extends JFrame{
 		contentPane.add(panel, BorderLayout.WEST);
 		GridBagLayout gbl_panel = new GridBagLayout();
 		gbl_panel.columnWidths = new int[]{0, 0};
-		gbl_panel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0};
+		gbl_panel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0};
 		gbl_panel.columnWeights = new double[]{0.0, Double.MIN_VALUE};
-		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
 		
+		
+		//Icon icon = new ImageIcon("/home/filip/Desktop/icons/");
 		btnUndo = new JButton("Undo");
+		
 		btnUndo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				controller.undo();
@@ -211,9 +236,35 @@ public class DrawingFrame extends JFrame{
 			}
 		});
 		GridBagConstraints gbc_btnBringToBack = new GridBagConstraints();
+		gbc_btnBringToBack.insets = new Insets(0, 0, 5, 0);
 		gbc_btnBringToBack.gridx = 0;
 		gbc_btnBringToBack.gridy = 5;
 		panel.add(btnBringToBack, gbc_btnBringToBack);
+		
+		btnBorder = new JButton("Border color");
+		btnBorder.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				controller.colorTheBorder();
+			}
+		});
+		btnBorder.setBackground(Color.BLACK);
+		GridBagConstraints gbc_btnBorder = new GridBagConstraints();
+		gbc_btnBorder.insets = new Insets(0, 0, 5, 0);
+		gbc_btnBorder.gridx = 0;
+		gbc_btnBorder.gridy = 6;
+		panel.add(btnBorder, gbc_btnBorder);
+		
+		btnInner = new JButton("Inner color");
+		btnInner.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				controller.colorTheInner();
+			}
+		});
+		btnInner.setBackground(Color.WHITE);
+		GridBagConstraints gbc_btnInner = new GridBagConstraints();
+		gbc_btnInner.gridx = 0;
+		gbc_btnInner.gridy = 7;
+		panel.add(btnInner, gbc_btnInner);
 	}
 
 	public JButton getBtnUndo() {

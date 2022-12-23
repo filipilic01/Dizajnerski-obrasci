@@ -164,7 +164,7 @@ public class DlgLine extends JDialog {
 			contentPanel.add(txtEPY, gbc_txtEPY);
 			txtEPY.setColumns(10);
 		}
-		{
+		/*{
 		    btnColorLine = new JButton("Border color");
 			btnColorLine.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -180,7 +180,7 @@ public class DlgLine extends JDialog {
 			gbc_btnColorLine.gridx = 2;
 			gbc_btnColorLine.gridy = 7;
 			contentPanel.add(btnColorLine, gbc_btnColorLine);
-		}
+		}*/
 		{
 			Component horizontalStrut = Box.createHorizontalStrut(20);
 			GridBagConstraints gbc_horizontalStrut = new GridBagConstraints();

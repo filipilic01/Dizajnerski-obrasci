@@ -88,10 +88,10 @@ public class Donut extends Circle{
 		Area iner=new Area(eIner);
 		outer.subtract(iner);
 		
-		//g.setColor(getInnerColor());
+		g.setColor(getColorInner());
 		((Graphics2D) g).fill(outer);
 		
-		g.setColor(getColorInner());
+		//g.setColor(getColorInner());
 		/*super.fill(g);
 	    g.setColor(Color.white);
 		g.fillOval(center.getX()-innerRadius+1, center.getY()-innerRadius+1, innerRadius*2-1, innerRadius*2-1);*/

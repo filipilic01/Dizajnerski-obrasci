@@ -153,7 +153,7 @@ public class DlgRectangle extends JDialog {
 			contentPanel.add(txtHeight, gbc_txtHeight);
 			txtHeight.setColumns(10);
 		}
-		{
+		/*{
 		    btnBorderColor = new JButton("Border color");
 			btnBorderColor.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -186,7 +186,7 @@ public class DlgRectangle extends JDialog {
 			gbc_btnInnerColor.gridx = 2;
 			gbc_btnInnerColor.gridy = 7;
 			contentPanel.add(btnInnerColor, gbc_btnInnerColor);
-		}
+		}*/
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
