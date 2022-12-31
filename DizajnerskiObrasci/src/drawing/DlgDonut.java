@@ -214,7 +214,7 @@ public class DlgDonut extends JDialog {
 				panel.add(txtInner, gbc_txtInner);
 				txtInner.setColumns(10);
 			}
-		/*	{
+			{
 				 btnDonutBorder = new JButton("Border color");
 				btnDonutBorder.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
@@ -244,7 +244,7 @@ public class DlgDonut extends JDialog {
 				gbc_btnDonutInner.gridx = 3;
 				gbc_btnDonutInner.gridy = 6;
 				panel.add(btnDonutInner, gbc_btnDonutInner);
-			}*/
+			}
 		}
 	}
 

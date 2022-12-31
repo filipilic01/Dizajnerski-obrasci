@@ -10,7 +10,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import adapter.HexagonAdapter;
+import command.AddBringToBackCmd;
+import command.AddBringToFrontCmd;
 import command.AddShapeCmd;
+import command.AddToBackCmd;
+import command.AddToFrontCmd;
 import command.CommandShape;
 import command.RemoveShapeCmd;
 import command.UpdateLineCmd;
@@ -40,6 +44,10 @@ public class DrawingController {
 	private DrawingModel model;
 	private int num = 0;
 	private AddShapeCmd addShapeCmd;
+	private AddBringToBackCmd addBringToBackCmd;
+	private AddBringToFrontCmd addBringToFrontCmd;
+	private AddToFrontCmd addToFrontCmd;
+	private AddToBackCmd addToBackCmd;
 	private RemoveShapeCmd removeShapeCmd;
 	private UpdatePointCmd updatePointCmd;
 	private UpdateLineCmd updateLineCmd;
@@ -50,6 +58,12 @@ public class DrawingController {
 	private Observable observable;
 	private Color border;
 	private Color inner;
+	private DlgDonut dlgDonut; 
+	private DlgRectangle dlgRec;
+	private DlgHexagon dlgHexagon; 
+	private DlgCircle dlgCircle;
+	private DlgPoint dlgPo;
+	private DlgLine dlgLi;
 	
 	private DrawingFrame frame;
 	
@@ -114,11 +128,15 @@ public class DrawingController {
 			
 		if(frame.getTglbtnHexagon().isSelected()) {
 			sP=null;
-			DlgHexagon dlgHexagon = new DlgHexagon();
+			dlgHexagon = new DlgHexagon();
 			dlgHexagon.getTxtX().setText(Integer.toString(e.getX()));
 			dlgHexagon.getTxtY().setText(Integer.toString(e.getY()));
 			dlgHexagon.getTxtX().setEditable(false);
 			dlgHexagon.getTxtY().setEditable(false);
+			dlgHexagon.getBtnBorder().setBackground(frame.getBtnBorder().getBackground());
+			dlgHexagon.getBtnBorder().setBackground(frame.getBtnInner().getBackground());
+			dlgHexagon.getBtnBorder().setEnabled(false);
+			dlgHexagon.getBtnInner().setEnabled(false);
 			dlgHexagon.setVisible(true);
 			
 			if(dlgHexagon.isGood()) {
@@ -140,11 +158,15 @@ public class DrawingController {
 		
 		 if(frame.getTglbtnCircle().isSelected()) {
 			 sP=null;
-			DlgCircle dlgCircle=new DlgCircle();
+			dlgCircle=new DlgCircle();
 			dlgCircle.getTxtX().setText(Integer.toString(e.getX()));
 			dlgCircle.getTxtY().setText(Integer.toString(e.getY()));
 			dlgCircle.getTxtX().setEditable(false);
 			dlgCircle.getTxtY().setEditable(false);
+			dlgCircle.getBtnCircleBorder().setBackground(frame.getBtnBorder().getBackground());
+			dlgCircle.getBtnCircleColorInner().setBackground(frame.getBtnInner().getBackground());
+			dlgCircle.getBtnCircleBorder().setEnabled(false);
+			dlgCircle.getBtnCircleColorInner().setEnabled(false);
 			dlgCircle.setVisible(true);
 			
 			if(dlgCircle.isGood()) {
@@ -160,11 +182,15 @@ public class DrawingController {
 		}
 		 if(frame.getTglbtnRectangle().isSelected()) {
 			 	sP=null;
-			 	DlgRectangle dlgRec=new DlgRectangle();
+			 	dlgRec=new DlgRectangle();
 				dlgRec.getTxtX().setText(Integer.toString(e.getX()));
 				dlgRec.getTxtY().setText(Integer.toString(e.getY()));
 				dlgRec.getTxtX().setEditable(false);
 				dlgRec.getTxtY().setEditable(false);
+				dlgRec.getBtnBorderColor().setBackground(frame.getBtnBorder().getBackground());
+				dlgRec.getBtnInnerColor().setBackground(frame.getBtnInner().getBackground());
+				dlgRec.getBtnBorderColor().setEnabled(false);
+				dlgRec.getBtnInnerColor().setEnabled(false);
 			 	dlgRec.setVisible(true);
 			 
 				if (dlgRec.isOkk()){
@@ -183,11 +209,15 @@ public class DrawingController {
 		}
 		 if(frame.getTglbtnDonut().isSelected()) {
 			 sP=null;
-			DlgDonut dlgDonut =new DlgDonut();
+			dlgDonut =new DlgDonut();
 			dlgDonut.getTxtX().setText(Integer.toString(e.getX()));
 			dlgDonut.getTxtY().setText(Integer.toString(e.getY()));
 			dlgDonut.getTxtX().setEditable(false);
 			dlgDonut.getTxtY().setEditable(false);
+			dlgDonut.getBtnDonutBorder().setBackground(frame.getBtnBorder().getBackground());
+			dlgDonut.getBtnDonutInner().setBackground(frame.getBtnInner().getBackground());
+			dlgDonut.getBtnDonutBorder().setEnabled(false);
+			dlgDonut.getBtnDonutInner().setEnabled(false);
 		 	dlgDonut.setVisible(true);
 		 	
 		 	if(dlgDonut.isOkkk()) {
@@ -375,10 +405,15 @@ public class DrawingController {
 			if(option==JOptionPane.YES_OPTION) {
 				for(int i=0;i<model.getShapes().size();i++) {
 					if(!model.getShapes().get(i).isSelected()){
+						
 						//model.getShapes().remove(i);
 						//frame.repaint();
 						temp.add(model.getShapes().get(i));
 					}
+					/*else {
+						RemoveShapeCmd removeShapeCmd = new RemoveShapeCmd(model,model.getShapes().get(i));
+						commands.add(removeShapeCmd);
+					}*/
 				}
 				model.getShapes().clear();
 			
@@ -421,11 +456,12 @@ public class DrawingController {
 					if(model.getShapes().get(i) instanceof Point) {
 						
 						if(model.getShapes().get(i).isSelected()) {
-						DlgPoint dlgPo=new DlgPoint();
+						dlgPo=new DlgPoint();
 						Point p2=(Point)model.getShapes().get(i);
 						dlgPo.getTxtX().setText(Integer.toString(p2.getX()));
 						dlgPo.getTxtY().setText(Integer.toString(p2.getY()));
-						//dlgPo.getBtnColorPoint().setBackground(p2.getColor());
+						dlgPo.getBtnColorPoint().setBackground(frame.getBtnBorder().getBackground());
+						dlgPo.getBtnColorPoint().setEnabled(false);
 						dlgPo.setVisible(true);
 						setSelectModify(true);
 						//shapes.remove(i);
@@ -456,13 +492,14 @@ public class DrawingController {
 					}
 					else if(model.getShapes().get(i) instanceof Line) {
 						if(model.getShapes().get(i).isSelected()) {
-						DlgLine dlgLi=new DlgLine();
+						dlgLi=new DlgLine();
 						Line l=(Line)model.getShapes().get(i);
 						dlgLi.getTxtSPX().setText(Integer.toString(l.getStartPoint().getX()));
 						dlgLi.getTxtSPY().setText(Integer.toString(l.getStartPoint().getY()));
 						dlgLi.getTxtEPX().setText(Integer.toString(l.getEndPoint().getX()));
 						dlgLi.getTxtEPY().setText(Integer.toString(l.getEndPoint().getY()));
-						//dlgLi.getBtnColorLine().setBackground(l.getColor());
+						dlgLi.getBtnColorLine().setBackground(frame.getBtnBorder().getBackground());
+						dlgLi.getBtnColorLine().setEnabled(false);
 						dlgLi.setVisible(true);
 						setSelectModify(true);
 						//shapes.remove(i);
@@ -477,7 +514,6 @@ public class DrawingController {
 							Line l2=new Line(new Point(sX,sY), new Point(eX, eY), frame.getBtnBorder().getBackground());
 							//updateLineCmd = new UpdateLineCmd(l,l2);
 							//commands.add(updateLineCmd);
-							//updateLineCmd.execute();
 							model.getShapes().remove(i);
 							
 							model.getShapes().add(l2);
@@ -495,25 +531,27 @@ public class DrawingController {
 					}
 					else if(model.getShapes().get(i) instanceof Rectangle) {
 						if(model.getShapes().get(i).isSelected()) {
-						DlgRectangle dlgRe=new DlgRectangle();
+						dlgRec=new DlgRectangle();
 						Rectangle r1=(Rectangle)model.getShapes().get(i);
-						dlgRe.getTxtX().setText(Integer.toString(r1.getUpperLeftPoint().getX()));
-						dlgRe.getTxtY().setText(Integer.toString(r1.getUpperLeftPoint().getY()));
-						dlgRe.getTxtWidth().setText(Integer.toString(r1.getWidth()));
-						dlgRe.getTxtHeight().setText(Integer.toString(r1.getHeight()));
-						//dlgRe.getBtnBorderColor().setBackground(r1.getColor());
-						//dlgRe.getBtnInnerColor().setBackground(r1.getColorInner());
-						dlgRe.setVisible(true);
+						dlgRec.getTxtX().setText(Integer.toString(r1.getUpperLeftPoint().getX()));
+						dlgRec.getTxtY().setText(Integer.toString(r1.getUpperLeftPoint().getY()));
+						dlgRec.getTxtWidth().setText(Integer.toString(r1.getWidth()));
+						dlgRec.getTxtHeight().setText(Integer.toString(r1.getHeight()));
+						dlgRec.getBtnBorderColor().setBackground(frame.getBtnBorder().getBackground());
+						dlgRec.getBtnInnerColor().setBackground(frame.getBtnInner().getBackground());
+						dlgRec.getBtnBorderColor().setEnabled(false);
+						dlgRec.getBtnInnerColor().setEnabled(false);
+						dlgRec.setVisible(true);
 						setSelectModify(true);
 						//shapes.remove(i);
 						//repaint();
 						
 						
-						if(dlgRe.isOkk()) {
-							int uX=(Integer.parseInt(dlgRe.getTxtX().getText()));
-							int uY=(Integer.parseInt(dlgRe.getTxtY().getText()));
-							int wid=(Integer.parseInt(dlgRe.getTxtWidth().getText()));
-							int he=(Integer.parseInt(dlgRe.getTxtHeight().getText()));
+						if(dlgRec.isOkk()) {
+							int uX=(Integer.parseInt(dlgRec.getTxtX().getText()));
+							int uY=(Integer.parseInt(dlgRec.getTxtY().getText()));
+							int wid=(Integer.parseInt(dlgRec.getTxtWidth().getText()));
+							int he=(Integer.parseInt(dlgRec.getTxtHeight().getText()));
 							Color clr1= frame.getBtnBorder().getBackground();
 							Color clr2=frame.getBtnInner().getBackground();
 							
@@ -535,23 +573,25 @@ public class DrawingController {
 					}
 					else if(model.getShapes().get(i) instanceof Circle==true && model.getShapes().get(i) instanceof Donut ==false) {
 						if(model.getShapes().get(i).isSelected()) {
-						DlgCircle dlgCir=new DlgCircle();
+						dlgCircle=new DlgCircle();
 						Circle c1=(Circle)model.getShapes().get(i);
-						dlgCir.getTxtX().setText(Integer.toString(c1.getCenter().getX()));
-						dlgCir.getTxtY().setText(Integer.toString(c1.getCenter().getY()));
-						dlgCir.getTxtRadius().setText(Integer.toString(c1.getRadius()));
-						//dlgCir.getBtnCircleBorder().setBackground(c1.getColor());
-						//dlgCir.getBtnCircleColorInner().setBackground(c1.getColorInner());
-						dlgCir.setVisible(true);
+						dlgCircle.getTxtX().setText(Integer.toString(c1.getCenter().getX()));
+						dlgCircle.getTxtY().setText(Integer.toString(c1.getCenter().getY()));
+						dlgCircle.getTxtRadius().setText(Integer.toString(c1.getRadius()));
+						dlgCircle.getBtnCircleBorder().setBackground(frame.getBtnBorder().getBackground());
+						dlgCircle.getBtnCircleColorInner().setBackground(frame.getBtnInner().getBackground());
+						dlgCircle.getBtnCircleBorder().setEnabled(false);
+						dlgCircle.getBtnCircleColorInner().setEnabled(false);
+						dlgCircle.setVisible(true);
 						setSelectModify(true);
 						//shapes.remove(i);
 						//repaint();
 						
 					
-						if(dlgCir.isGood()) {
-							int xx=(Integer.parseInt(dlgCir.getTxtX().getText()));
-							int yy=(Integer.parseInt(dlgCir.getTxtY().getText()));
-							int ra=(Integer.parseInt(dlgCir.getTxtRadius().getText()));
+						if(dlgCircle.isGood()) {
+							int xx=(Integer.parseInt(dlgCircle.getTxtX().getText()));
+							int yy=(Integer.parseInt(dlgCircle.getTxtY().getText()));
+							int ra=(Integer.parseInt(dlgCircle.getTxtRadius().getText()));
 							Color col1=frame.getBtnBorder().getBackground();
 							Color col2=frame.getBtnInner().getBackground();
 							Circle c2=new Circle(new Point(xx, yy),ra, col1, col2);
@@ -572,24 +612,26 @@ public class DrawingController {
 					}
 					else if(model.getShapes().get(i) instanceof Donut) {
 						if(model.getShapes().get(i).isSelected()) {
-						DlgDonut dlgDo=new DlgDonut();
+						dlgDonut=new DlgDonut();
 						Donut d1=(Donut) model.getShapes().get(i);
-						dlgDo.getTxtX().setText(Integer.toString(d1.getCenter().getX()));
-						dlgDo.getTxtY().setText(Integer.toString(d1.getCenter().getY()));
-						dlgDo.getTxtRadius().setText(Integer.toString(d1.getRadius()));
-						dlgDo.getTxtInner().setText(Integer.toString(d1.getInnerRadius()));
-						//dlgDo.getBtnDonutBorder().setBackground(d1.getColor());
-						//dlgDo.getBtnDonutInner().setBackground(d1.getColorInner());
-						dlgDo.setVisible(true);
+						dlgDonut.getTxtX().setText(Integer.toString(d1.getCenter().getX()));
+						dlgDonut.getTxtY().setText(Integer.toString(d1.getCenter().getY()));
+						dlgDonut.getTxtRadius().setText(Integer.toString(d1.getRadius()));
+						dlgDonut.getTxtInner().setText(Integer.toString(d1.getInnerRadius()));
+						dlgDonut.getBtnDonutBorder().setBackground(frame.getBtnBorder().getBackground());
+						dlgDonut.getBtnDonutInner().setBackground(frame.getBtnInner().getBackground());
+						dlgDonut.getBtnDonutBorder().setEnabled(false);
+						dlgDonut.getBtnDonutInner().setEnabled(false);
+						dlgDonut.setVisible(true);
 						setSelectModify(true);
 						//shapes.remove(i);
 						//repaint();
 						
-						if(dlgDo.isOkkk()) {
-							int dX=(Integer.parseInt(dlgDo.getTxtX().getText()));
-							int dY=(Integer.parseInt(dlgDo.getTxtY().getText()));
-							int radi=(Integer.parseInt(dlgDo.getTxtRadius().getText()));
-							int in=(Integer.parseInt(dlgDo.getTxtInner().getText()));
+						if(dlgDonut.isOkkk()) {
+							int dX=(Integer.parseInt(dlgDonut.getTxtX().getText()));
+							int dY=(Integer.parseInt(dlgDonut.getTxtY().getText()));
+							int radi=(Integer.parseInt(dlgDonut.getTxtRadius().getText()));
+							int in=(Integer.parseInt(dlgDonut.getTxtInner().getText()));
 							Donut d2=new Donut(new Point(dX, dY),radi, in, frame.getBtnBorder().getBackground(),frame.getBtnInner().getBackground());
 							model.getShapes().remove(i);
 						
@@ -609,21 +651,23 @@ public class DrawingController {
 					}
 					else if(model.getShapes().get(i) instanceof HexagonAdapter) {
 						if(model.getShapes().get(i).isSelected()) {
-							DlgHexagon dlgHex = new DlgHexagon();
+							dlgHexagon = new DlgHexagon();
 							HexagonAdapter h1 = (HexagonAdapter) model.getShapes().get(i);
 							
-							dlgHex.getTxtX().setText(Integer.toString(h1.getHexagon().getX()));
-							dlgHex.getTxtY().setText(Integer.toString(h1.getHexagon().getY()));
-							dlgHex.getTxtRadius().setText(Integer.toString(h1.getHexagon().getR()));
-							//dlgHex.getBtnBorder().setBackground(h1.getHexagon().getBorderColor());
-							//dlgHex.getBtnInner().setBackground(h1.getHexagon().getAreaColor());
-							dlgHex.setVisible(true);
+							dlgHexagon.getTxtX().setText(Integer.toString(h1.getHexagon().getX()));
+							dlgHexagon.getTxtY().setText(Integer.toString(h1.getHexagon().getY()));
+							dlgHexagon.getTxtRadius().setText(Integer.toString(h1.getHexagon().getR()));
+							dlgHexagon.getBtnBorder().setBackground(frame.getBtnBorder().getBackground());
+							dlgHexagon.getBtnInner().setBackground(frame.getBtnInner().getBackground());
+							dlgHexagon.getBtnBorder().setEnabled(false);
+							dlgHexagon.getBtnInner().setEnabled(false);
+							dlgHexagon.setVisible(true);
 							setSelectModify(true);
 							
-							if(dlgHex.isGood()) {
-								int dX = (Integer.parseInt(dlgHex.getTxtX().getText()));
-								int dY = (Integer.parseInt(dlgHex.getTxtY().getText()));
-								int r = (Integer.parseInt(dlgHex.getTxtRadius().getText()));
+							if(dlgHexagon.isGood()) {
+								int dX = (Integer.parseInt(dlgHexagon.getTxtX().getText()));
+								int dY = (Integer.parseInt(dlgHexagon.getTxtY().getText()));
+								int r = (Integer.parseInt(dlgHexagon.getTxtRadius().getText()));
 								
 								Hexagon h = new Hexagon(dX,dY,r);
 								h.setBorderColor(frame.getBtnBorder().getBackground());

@@ -188,7 +188,7 @@ public class DlgPoint extends JDialog {
 			gbc_verticalStrut.gridy = 4;
 			contentPanel.add(verticalStrut, gbc_verticalStrut);
 		}
-		/*{
+		{
 			btnColorPoint = new JButton("Border color");
 			btnColorPoint.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -204,7 +204,7 @@ public class DlgPoint extends JDialog {
 			gbc_btnColorPoint.gridx = 3;
 			gbc_btnColorPoint.gridy = 5;
 			contentPanel.add(btnColorPoint, gbc_btnColorPoint);
-		}*/
+		}
 		{
 			Component horizontalStrut = Box.createHorizontalStrut(20);
 			GridBagConstraints gbc_horizontalStrut = new GridBagConstraints();

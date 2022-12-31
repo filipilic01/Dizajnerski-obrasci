@@ -15,6 +15,8 @@ public class UpdateLineCmd implements CommandShape{
 
 	@Override
 	public void execute() {
+		
+		
 		original.getStartPoint().setX(oldLine.getStartPoint().getX());
 		original.getStartPoint().setY(oldLine.getStartPoint().getY());
 		original.getEndPoint().setX(oldLine.getEndPoint().getX());
@@ -28,6 +30,7 @@ public class UpdateLineCmd implements CommandShape{
 		oldLine.getEndPoint().setY(newLine.getEndPoint().getY());
 //		oldLine.setStartPoint(newLine.getStartPoint());
 //		oldLine.setEndPoint(newLine.getEndPoint());
+		
 		
 	}
 
