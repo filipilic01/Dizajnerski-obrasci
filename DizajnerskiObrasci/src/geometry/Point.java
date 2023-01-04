@@ -3,7 +3,7 @@ package geometry;
 import java.awt.Graphics;
 import java.awt.Color;
 
-public class Point extends Shape {
+public class Point extends Shape implements Cloneable{
 	private int x;
 	private int y;
 
@@ -100,5 +100,16 @@ public class Point extends Shape {
 
 	public String toString() {
 		return "(" + x + "," + y + ")";
+	}
+	
+	public Point clone() {
+		Point point =new Point();
+		
+		point.setX(this.getX());
+		point.setY(this.getY());
+		point.setColor(this.getColor());
+		
+		return point;
+		
 	}
 }

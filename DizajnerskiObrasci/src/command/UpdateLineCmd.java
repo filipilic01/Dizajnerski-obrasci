@@ -1,14 +1,18 @@
 package command;
 
+import java.awt.Color;
+
 import geometry.Line;
+import geometry.Point;
 
 public class UpdateLineCmd implements CommandShape{
 	
 	private Line oldLine;
 	private Line newLine;
-	private Line original = new Line();
+	private Line original/*=new Line(new Point(10,10), new Point(20,20), Color.black)*/;
 
 	public UpdateLineCmd(Line oldLine, Line newLine) {
+		
 		this.oldLine = oldLine;
 		this.newLine = newLine;
 	}
@@ -16,20 +20,19 @@ public class UpdateLineCmd implements CommandShape{
 	@Override
 	public void execute() {
 		
-		
-		original.getStartPoint().setX(oldLine.getStartPoint().getX());
+		original=oldLine.clone();
+		/*original.getStartPoint().setX(oldLine.getStartPoint().getX());
 		original.getStartPoint().setY(oldLine.getStartPoint().getY());
 		original.getEndPoint().setX(oldLine.getEndPoint().getX());
 		original.getEndPoint().setY(oldLine.getEndPoint().getY());
-//		original.setStartPoint(oldLine.getStartPoint());
-//		original.setEndPoint(oldLine.getEndPoint());
+		//original.setColor(oldLine.getColor());*/
+
 
 		oldLine.getStartPoint().setX(newLine.getStartPoint().getX());
 		oldLine.getStartPoint().setY(newLine.getStartPoint().getY());
 		oldLine.getEndPoint().setX(newLine.getEndPoint().getX());
 		oldLine.getEndPoint().setY(newLine.getEndPoint().getY());
-//		oldLine.setStartPoint(newLine.getStartPoint());
-//		oldLine.setEndPoint(newLine.getEndPoint());
+		oldLine.setColor(newLine.getColor());
 		
 		
 	}
@@ -40,6 +43,7 @@ public class UpdateLineCmd implements CommandShape{
 		oldLine.getStartPoint().setY(original.getStartPoint().getY());
 		oldLine.getEndPoint().setX(original.getEndPoint().getX());
 		oldLine.getEndPoint().setY(original.getEndPoint().getY());
+		//oldLine.setColor(original.getColor());
 		
 	}
 

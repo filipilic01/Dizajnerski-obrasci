@@ -14,6 +14,8 @@ public class UpdateDonutCmd implements CommandShape{
 	}
 	@Override
 	public void execute() {
+		original=oldDonut.clone();
+		/*
 		original.getCenter().setX(oldDonut.getCenter().getX());
 		original.getCenter().setY(oldDonut.getCenter().getY());
 		try {
@@ -23,6 +25,9 @@ public class UpdateDonutCmd implements CommandShape{
 			e.printStackTrace();
 		}
 		original.setInnerRadius(oldDonut.getInnerRadius());
+		original.setColor(oldDonut.getColor());
+		original.setColorInner(oldDonut.getColorInner());
+		*/
 		
 		oldDonut.getCenter().setX(newDonut.getCenter().getX());
 		oldDonut.getCenter().setY(newDonut.getCenter().getY());
@@ -33,7 +38,8 @@ public class UpdateDonutCmd implements CommandShape{
 			e.printStackTrace();
 		}
 		oldDonut.setInnerRadius(newDonut.getInnerRadius());
-		
+		oldDonut.setColor(newDonut.getColor());
+		oldDonut.setColorInner(newDonut.getColorInner());
 	}
 
 	@Override
@@ -47,6 +53,8 @@ public class UpdateDonutCmd implements CommandShape{
 			e.printStackTrace();
 		}
 		oldDonut.setInnerRadius(original.getInnerRadius());
+		oldDonut.setColor(original.getColor());
+		oldDonut.setColorInner(original.getColorInner());
 		
 	}
 

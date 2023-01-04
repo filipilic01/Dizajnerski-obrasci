@@ -3,7 +3,7 @@ package geometry;
 import java.awt.Color;
 import java.awt.Graphics;
 
-public class Circle extends ShapeShape{
+public class Circle extends ShapeShape implements Cloneable{
 
 	protected Point center;
 	private int radius;
@@ -112,6 +112,23 @@ public class Circle extends ShapeShape{
 	public String toString() {
 		// Center=(x,y), radius= radius
 		return "Center=" + center + ", radius=" + radius;
+	}
+	
+	public Circle clone() {
+		Circle circle = new Circle();
+	
+		circle.getCenter().setX(this.getCenter().getX());
+		circle.getCenter().setY(this.getCenter().getY());
+		try {
+			circle.setRadius(this.getRadius());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		circle.setColor(this.getColor());
+		circle.setColorInner(this.getColorInner());
+		
+		return circle;
 	}
 }
 

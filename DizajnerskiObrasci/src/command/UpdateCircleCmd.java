@@ -14,7 +14,8 @@ public class UpdateCircleCmd implements CommandShape{
 	}
 	
 	public void execute(){
-		original.getCenter().setX(oldCircle.getCenter().getX());
+		original=oldCircle.clone();
+		/*original.getCenter().setX(oldCircle.getCenter().getX());
 		original.getCenter().setY(oldCircle.getCenter().getY());
 		try {
 			original.setRadius(oldCircle.getRadius());
@@ -22,7 +23,9 @@ public class UpdateCircleCmd implements CommandShape{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+		original.setColor(oldCircle.getColor());
+		original.setColorInner(original.getColorInner());
+		*/
 		oldCircle.getCenter().setX(newCircle.getCenter().getX());
 		oldCircle.getCenter().setY(newCircle.getCenter().getY());
 		try {
@@ -31,6 +34,8 @@ public class UpdateCircleCmd implements CommandShape{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		oldCircle.setColor(newCircle.getColor());
+		oldCircle.setColorInner(newCircle.getColorInner());
 		
 	}
 	
@@ -43,6 +48,7 @@ public class UpdateCircleCmd implements CommandShape{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+		oldCircle.setColor(original.getColor());
+		oldCircle.setColorInner(original.getColorInner());
 	}
 }

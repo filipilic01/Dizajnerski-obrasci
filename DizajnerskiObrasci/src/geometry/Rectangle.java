@@ -3,7 +3,7 @@ package geometry;
 import java.awt.Graphics;
 import java.awt.Color;
 
-public class Rectangle extends ShapeShape {
+public class Rectangle extends ShapeShape implements Cloneable{
 
 	private Point upperLeftPoint;
 	private int width;
@@ -124,6 +124,19 @@ public class Rectangle extends ShapeShape {
 
 	public String toString() {
 		return "Upper left point:"+ upperLeftPoint+", width = "+ width +",height = "+height;
+	}
+	
+	public Rectangle clone() {
+		Rectangle rectangle = new Rectangle();
+		
+		rectangle.getUpperLeftPoint().setX(this.getUpperLeftPoint().getX());
+		rectangle.getUpperLeftPoint().setY(this.getUpperLeftPoint().getY());
+		rectangle.setHeight(this.getHeight());
+		rectangle.setWidth(this.getWidth());
+		rectangle.setColor(this.getColor());
+		rectangle.setColorInner(this.getColorInner());
+		
+		return rectangle;
 	}
 }
 	

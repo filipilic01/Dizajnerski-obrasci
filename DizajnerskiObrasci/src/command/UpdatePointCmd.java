@@ -15,10 +15,11 @@ public class UpdatePointCmd implements CommandShape{
 	}
 	@Override
 	public void execute() {
-		original.setX(oldPoint.getX());
+		original=oldPoint.clone();
+		/*original.setX(oldPoint.getX());
 		original.setY(oldPoint.getY());
 		original.setColor(oldPoint.getColor());
-		
+		*/
 		oldPoint.setX(newPoint.getX());
 		oldPoint.setY(newPoint.getY());
 		oldPoint.setColor(newPoint.getColor());

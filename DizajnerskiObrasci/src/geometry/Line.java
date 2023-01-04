@@ -3,7 +3,7 @@ package geometry;
 import java.awt.Color;
 import java.awt.Graphics;
 
-public class Line extends Shape {
+public class Line extends Shape implements Cloneable{
 	private Point startPoint;
 	private Point endPoint;
 
@@ -96,5 +96,19 @@ public class Line extends Shape {
 
 	public String toString() {
 		return startPoint + "-- >" + endPoint;
+	}
+	
+	public Line clone() {
+		Line line = new Line();
+		
+		line.getStartPoint().setX(this.getStartPoint().getX());//ovo this se odnosi na oldLine
+		line.getStartPoint().setY(this.getStartPoint().getY());
+
+		line.getEndPoint().setX(this.getEndPoint().getX());
+		line.getEndPoint().setY(this.getEndPoint().getY());
+
+		line.setColor(getColor());
+		
+		return line;
 	}
 }
