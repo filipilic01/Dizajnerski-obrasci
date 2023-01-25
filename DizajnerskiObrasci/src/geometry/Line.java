@@ -101,6 +101,9 @@ public class Line extends Shape implements Cloneable{
 	public Line clone() {
 		Line line = new Line();
 		
+		line.setStartPoint(new Point());
+		line.setEndPoint(new Point());
+	
 		line.getStartPoint().setX(this.getStartPoint().getX());//ovo this se odnosi na oldLine
 		line.getStartPoint().setY(this.getStartPoint().getY());
 

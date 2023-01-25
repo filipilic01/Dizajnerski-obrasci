@@ -117,6 +117,8 @@ public class Donut extends Circle implements Cloneable{
 	public Donut clone() {
 		Donut donut =new Donut();
 		
+		donut.setCenter(new Point());
+		
 		donut.getCenter().setX(this.getCenter().getX());
 		donut.getCenter().setY(this.getCenter().getY());
 		try {

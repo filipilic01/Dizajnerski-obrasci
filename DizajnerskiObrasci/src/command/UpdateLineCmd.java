@@ -9,7 +9,7 @@ public class UpdateLineCmd implements CommandShape{
 	
 	private Line oldLine;
 	private Line newLine;
-	private Line original/*=new Line(new Point(10,10), new Point(20,20), Color.black)*/;
+	private Line original=new Line();
 
 	public UpdateLineCmd(Line oldLine, Line newLine) {
 		
@@ -39,11 +39,12 @@ public class UpdateLineCmd implements CommandShape{
 
 	@Override
 	public void unexecute() {
+		
 		oldLine.getStartPoint().setX(original.getStartPoint().getX());
 		oldLine.getStartPoint().setY(original.getStartPoint().getY());
 		oldLine.getEndPoint().setX(original.getEndPoint().getX());
 		oldLine.getEndPoint().setY(original.getEndPoint().getY());
-		//oldLine.setColor(original.getColor());
+		oldLine.setColor(original.getColor());
 		
 	}
 

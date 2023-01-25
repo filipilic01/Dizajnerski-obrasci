@@ -105,7 +105,7 @@ public class Circle extends ShapeShape implements Cloneable{
 	public void setRadius(int radius) throws Exception{
 		if(radius<0)
 			throw new Exception("Vrednost radiusa ne sme biti negativna");
-			System.out.println("Provera da li je izvrseno setovanje");
+			//System.out.println("Provera da li je izvrseno setovanje");
 		this.radius = radius;
 	}
 
@@ -116,6 +116,8 @@ public class Circle extends ShapeShape implements Cloneable{
 	
 	public Circle clone() {
 		Circle circle = new Circle();
+		
+		circle.setCenter(new Point());
 	
 		circle.getCenter().setX(this.getCenter().getX());
 		circle.getCenter().setY(this.getCenter().getY());

@@ -3,6 +3,7 @@ package adapter;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import geometry.Point;
 import geometry.Shape;
 import geometry.ShapeShape;
 import hexagon.Hexagon;
@@ -108,6 +109,8 @@ public class HexagonAdapter extends ShapeShape implements Cloneable{
 	
 	public HexagonAdapter clone() {
 		HexagonAdapter hexagonAdapter=new HexagonAdapter();
+		
+		hexagonAdapter.setHexagon(new Hexagon(0,0,0));
 		
 		hexagonAdapter.setX(this.getX());
 		hexagonAdapter.setY(this.getY());		

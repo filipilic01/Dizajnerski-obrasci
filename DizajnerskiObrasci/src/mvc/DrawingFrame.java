@@ -18,12 +18,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 import javax.swing.JButton;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
-public class DrawingFrame extends JFrame{
+public class DrawingFrame extends JFrame implements PropertyChangeListener{
 	private JPanel contentPane;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private Point sP;
@@ -45,12 +50,19 @@ public class DrawingFrame extends JFrame{
 	private JPanel panel;
 	private JButton btnUndo;
 	private JButton btnRedo;
+	
+
 	private JButton btnToFront;
 	private JButton btnToBack;
 	private JButton btnBringToFront;
 	private JButton btnBringToBack;
 	private JButton btnBorder;
 	private JButton btnInner;
+	
+	private JPanel pnlEast;
+	private JButton btnSave;
+	private JTextArea textArea_1;
+	private JScrollPane scrollPane= new JScrollPane();
 	
 	
 	
@@ -112,14 +124,14 @@ public class DrawingFrame extends JFrame{
 		pnlNorth.add(tglbtnCircle);
 		
 		tglbtnDonut = new JToggleButton("Donut");
-	
-		buttonGroup.add(tglbtnDonut);
-		pnlNorth.add(tglbtnDonut);
 		
-		tglbtnHexagon = new JToggleButton("Hexagon");
-		
-		buttonGroup.add(tglbtnHexagon);
-		pnlNorth.add(tglbtnHexagon);
+			buttonGroup.add(tglbtnDonut);
+			pnlNorth.add(tglbtnDonut);
+			
+			tglbtnHexagon = new JToggleButton("Hexagon");
+			
+			buttonGroup.add(tglbtnHexagon);
+			pnlNorth.add(tglbtnHexagon);
 		
 		JPanel pnlSouth = new JPanel();
 		contentPane.add(pnlSouth, BorderLayout.SOUTH);
@@ -129,6 +141,7 @@ public class DrawingFrame extends JFrame{
 		pnlSouth.add(tglbtnSelect);
 		
 		tglbtnModify = new JToggleButton("Modify");
+		tglbtnModify.setEnabled(false);
 		tglbtnModify.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				controller.modify();
@@ -138,6 +151,7 @@ public class DrawingFrame extends JFrame{
 		pnlSouth.add(tglbtnModify);
 		
 		tglbtnDelete = new JToggleButton("Delete");
+		tglbtnDelete.setEnabled(false);
 		tglbtnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				controller.delete();
@@ -145,6 +159,7 @@ public class DrawingFrame extends JFrame{
 		});
 		buttonGroup.add(tglbtnDelete);
 		pnlSouth.add(tglbtnDelete);
+		
 		
 		
 		contentPane.setBackground(Color.white);
@@ -161,9 +176,9 @@ public class DrawingFrame extends JFrame{
 		contentPane.add(panel, BorderLayout.WEST);
 		GridBagLayout gbl_panel = new GridBagLayout();
 		gbl_panel.columnWidths = new int[]{0, 0};
-		gbl_panel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0};
-		gbl_panel.columnWeights = new double[]{0.0, Double.MIN_VALUE};
-		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		gbl_panel.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+		gbl_panel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
 		
 		
@@ -262,9 +277,36 @@ public class DrawingFrame extends JFrame{
 		});
 		btnInner.setBackground(Color.WHITE);
 		GridBagConstraints gbc_btnInner = new GridBagConstraints();
+		gbc_btnInner.insets = new Insets(0, 0, 5, 0);
 		gbc_btnInner.gridx = 0;
 		gbc_btnInner.gridy = 7;
 		panel.add(btnInner, gbc_btnInner);
+		
+		textArea_1 = new JTextArea();
+		
+		
+		GridBagConstraints gbc_textArea_1 = new GridBagConstraints();
+		gbc_textArea_1.insets = new Insets(0, 0, 5, 0);
+		gbc_textArea_1.fill = GridBagConstraints.BOTH;
+		gbc_textArea_1.gridx = 0;
+		gbc_textArea_1.gridy = 9;
+		panel.add(textArea_1, gbc_textArea_1);
+		
+		/*scrollPane.setViewportView(textArea_1);
+		panel.add(scrollPane);*/
+		
+		pnlEast = new JPanel();
+		contentPane.add(pnlEast, BorderLayout.EAST);
+		
+		btnSave = new JButton("Save");
+		btnSave.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				controller.save();
+			}
+		});
+		pnlEast.add(btnSave);
+		
+		//contentPane.repaint();
 	}
 
 	public JButton getBtnUndo() {
@@ -325,6 +367,30 @@ public class DrawingFrame extends JFrame{
 
 	public JToggleButton getTglbtnDelete() {
 		return tglbtnDelete;
+	}
+	public JTextArea getTextArea_1() {
+		return textArea_1;
+	}
+
+	public void setTextArea_1(JTextArea textArea_1) {
+		this.textArea_1 = textArea_1;
+	}
+	
+	public void propertyChange(PropertyChangeEvent pce) {
+			if(pce.getPropertyName()=="Delete enable") {
+				tglbtnDelete.setEnabled(true);
+			}
+			else if(pce.getPropertyName()=="Delete disabled") {
+				tglbtnDelete.setEnabled(false);
+			}
+			else if(pce.getPropertyName()=="Modify enable") {
+				tglbtnModify.setEnabled(true);
+			}
+			else if(pce.getPropertyName()=="Modify disabled") {
+				tglbtnModify.setEnabled(false);
+			}
+			
+			contentPane.repaint();
 	}
 	
 }

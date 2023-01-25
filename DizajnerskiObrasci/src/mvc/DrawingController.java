@@ -2,6 +2,8 @@ package mvc;
 
 import java.awt.Color;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 
 import javax.swing.ButtonGroup;
@@ -10,13 +12,15 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import adapter.HexagonAdapter;
-import command.AddBringToBackCmd;
-import command.AddBringToFrontCmd;
+
 import command.AddShapeCmd;
-import command.AddToBackCmd;
-import command.AddToFrontCmd;
+
+import command.BringToBackCmd;
+import command.BringToFrontCmd;
 import command.CommandShape;
 import command.RemoveShapeCmd;
+import command.ToBackCmd;
+import command.ToFrontCmd;
 import command.UpdateCircleCmd;
 import command.UpdateDonutCmd;
 import command.UpdateHexagonCmd;
@@ -36,6 +40,8 @@ import geometry.Point;
 import geometry.Rectangle;
 import geometry.Shape;
 import hexagon.Hexagon;
+import strategy.Logger;
+import strategy.Save;
 
 
 public class DrawingController {
@@ -48,10 +54,6 @@ public class DrawingController {
 	private int num = 0;
 	private CommandShape command;
 	private AddShapeCmd addShapeCmd;
-	private AddBringToBackCmd addBringToBackCmd;
-	private AddBringToFrontCmd addBringToFrontCmd;
-	private AddToFrontCmd addToFrontCmd;
-	private AddToBackCmd addToBackCmd;
 	private RemoveShapeCmd removeShapeCmd;
 	private UpdatePointCmd updatePointCmd;
 	private UpdateLineCmd updateLineCmd;
@@ -59,6 +61,11 @@ public class DrawingController {
 	private UpdateCircleCmd updateCircleCmd;
 	private UpdateDonutCmd updateDonutCmd;
 	private UpdateHexagonCmd updateHexagonCmd;
+	private BringToBackCmd bringToBackCmd;
+	private BringToFrontCmd bringToFrontCmd;
+	private ToFrontCmd toFrontCmd;
+	private ToBackCmd toBackCmd;
+	private int indexUndo;
 	private int numOfSelectedShapes=0;
 	private ArrayList<CommandShape> temp = new ArrayList();
 	private ArrayList<Shape> selectedShapes = new ArrayList();
@@ -70,12 +77,15 @@ public class DrawingController {
 	private DlgCircle dlgCircle;
 	private DlgPoint dlgPo;
 	private DlgLine dlgLi;
-	
 	private DrawingFrame frame;
+	private PropertyChangeSupport propertyChangeSupport;
+	private Logger logger;
 	
 	public DrawingController(DrawingModel model, DrawingFrame frame) {
 		this.model = model;
 		this.frame = frame;
+		propertyChangeSupport = new PropertyChangeSupport(this);
+		logger = new Logger(this.frame.getTextArea_1());
 	}
 
 	
@@ -111,6 +121,8 @@ public class DrawingController {
 			//model.add(sh);
 			addShapeCmd.execute();
 			commands.add(addShapeCmd);
+			logger.log("Added_point: " + sh.toString());
+			temp.clear();
 			frame.repaint();
 			
 		}
@@ -128,6 +140,8 @@ public class DrawingController {
 				//model.add(sh);
 				addShapeCmd.execute();
 				commands.add(addShapeCmd);
+				logger.log("Added_line: " + sh.toString());
+				temp.clear();
 				frame.repaint();
 				sP=null;
 				
@@ -156,6 +170,8 @@ public class DrawingController {
 				//model.add(sh);
 				addShapeCmd.execute();
 				commands.add(addShapeCmd);
+				logger.log("Added_hexagon: " + sh.toString());
+				temp.clear();
 				frame.repaint();
 				
 				
@@ -184,6 +200,8 @@ public class DrawingController {
 				//model.add(c);
 				addShapeCmd.execute();
 				commands.add(addShapeCmd);
+				logger.log("Added_circle: " + c.toString());
+				temp.clear();
 				frame.repaint();
 			}
 			
@@ -213,6 +231,8 @@ public class DrawingController {
 					//model.add(r);
 					addShapeCmd.execute();
 					commands.add(addShapeCmd);
+					logger.log("Added_rectangle: " + r.toString());
+					temp.clear();
 					frame.repaint();
 				}
 			
@@ -239,6 +259,8 @@ public class DrawingController {
 		 		//model.add(d);
 		 		addShapeCmd.execute();
 		 		commands.add(addShapeCmd);
+		 		logger.log("Added_donut: " + d.toString());
+		 		temp.clear();
 		 		frame.repaint();
 		 	}
 		
@@ -288,6 +310,24 @@ public class DrawingController {
 	}
 		if(shape != null) {
 			shape.setSelected(true);
+			if(shape instanceof Point) {
+				logger.log("Selected_point: " + shape.toString());
+			}
+			else if(shape instanceof Line) {
+				logger.log("Selected_line: " + shape.toString());
+			}
+			else if(shape instanceof Circle) {
+				logger.log("Selected_circle: " + shape.toString());
+			}
+			else if(shape instanceof Rectangle) {
+				logger.log("Selected_rectangle: " + shape.toString());
+			}
+			else if(shape instanceof Donut) {
+				logger.log("Selected_donut: " + shape.toString());
+			}
+			else if(shape instanceof HexagonAdapter) {
+				logger.log("Selected_hexagon: " + shape.toString());
+			}
 			//numOfSelectedShapes++;
 			selectedShapes.add(shape);
 			frame.repaint();
@@ -301,6 +341,24 @@ public class DrawingController {
 				
 				if(model.getShapes().get(i).contains(x, y)) {
 					model.getShapes().get(i).setSelected(false);
+					if(model.getShapes().get(i) instanceof Point) {
+						logger.log("Deselected_point: " + model.getShapes().get(i).toString());
+					}
+					else if(model.getShapes().get(i) instanceof Line) {
+						logger.log("Deselected_line: " + model.getShapes().get(i).toString());
+					}
+					else if(model.getShapes().get(i) instanceof Circle) {
+						logger.log("Deselected_circle: " + model.getShapes().get(i).toString());
+					}
+					else if(model.getShapes().get(i) instanceof Rectangle) {
+						logger.log("Deselected_rectangle: " + model.getShapes().get(i).toString());
+					}
+					else if(model.getShapes().get(i) instanceof Donut) {
+						logger.log("Deselected_donut: " + model.getShapes().get(i).toString());
+					}
+					else if(model.getShapes().get(i) instanceof HexagonAdapter) {
+						logger.log("Deselected_hexagon: " + model.getShapes().get(i).toString());
+					}
 					//numOfSelectedShapes--;
 					selectedShapes.remove(model.getShapes().get(i));
 					frame.repaint();
@@ -308,12 +366,14 @@ public class DrawingController {
 				}
 				else {
 					counter++;
+				
 					//deselectAll();
 					//break;
 				}
 			}
 				else {
 					counter++;
+					
 				}
 			}
 			}
@@ -329,19 +389,58 @@ public class DrawingController {
 		
 		//frame.repaint();
 		if(counter==model.getShapes().size()) {
-			deselectAll();
+			deselectAll((ArrayList<Shape>)model.getShapes());
+		}
+		
+		if(selectedShapes.size()==0) {
+			propertyChangeSupport.firePropertyChange("Delete disabled", selectedShapes == null, selectedShapes != null);
+			propertyChangeSupport.firePropertyChange("Modify disabled", selectedShapes == null, selectedShapes != null);
+		}
+		else if(selectedShapes.size()==1) {
+			propertyChangeSupport.firePropertyChange("Modify enable", false, selectedShapes != null && selectedShapes.size() == 1);
+			propertyChangeSupport.firePropertyChange("Delete enable", false, selectedShapes != null && selectedShapes.size() == 1);
+		}
+		else if(selectedShapes.size()>1){
+			propertyChangeSupport.firePropertyChange("Delete enable", false, selectedShapes != null && selectedShapes.size() == 1);
+			propertyChangeSupport.firePropertyChange("Modify disabled", selectedShapes == null, selectedShapes != null);
 		}
 		
 	}
 	
-	public void deselectAll() {
-		for(int i = 0;i<model.getShapes().size();i++) {
-			model.getShapes().get(i).setSelected(false);
+	public void deselectAll(ArrayList<Shape> shapes) {
+		
+			for(int i = 0;i<shapes.size();i++) {
+				if(shapes.get(i).isSelected()) {
+					if(shapes.get(i) instanceof Point) {
+					logger.log("Deselected_point: " + model.getShapes().get(i).toString());
+				}
+				else if(shapes.get(i) instanceof Line) {
+					logger.log("Deselected_line: " + model.getShapes().get(i).toString());
+				}
+				else if(shapes.get(i) instanceof Circle) {
+					logger.log("Deselected_circle: " + model.getShapes().get(i).toString());
+				}
+				else if(shapes.get(i) instanceof Rectangle) {
+					logger.log("Deselected_rectangle: " + model.getShapes().get(i).toString());
+				}
+				else if(shapes.get(i) instanceof Donut) {
+					logger.log("Deselected_donut: " + model.getShapes().get(i).toString());
+				}
+				else if(shapes.get(i) instanceof HexagonAdapter) {
+					logger.log("Deselected_hexagon: " + model.getShapes().get(i).toString());
+				}
+				}
+				
+				
+			shapes.get(i).setSelected(false);
+			
+			
 			
 		}
+			selectedShapes.clear();
+			frame.repaint();
 		//numOfSelectedShapes=0;
-		selectedShapes.clear();
-		frame.repaint();
+		
 	}
 		
 	public int counter() {
@@ -369,10 +468,27 @@ public class DrawingController {
 					int selectedOption=JOptionPane.showConfirmDialog(null,"Are you sure you want to delete this shape?", "Warning message", JOptionPane.YES_NO_OPTION);
 					if(selectedOption==JOptionPane.YES_OPTION) {
 					RemoveShapeCmd removeShapeCmd = new RemoveShapeCmd(model,model.getShapes().get(i));
+					model.getShapes().get(i).setSelected(false);
 					selectedShapes.remove(model.getShapes().get(i));
 					//model.getShapes().remove(i);
+						if(model.getShapes().get(i) instanceof Point) {
+						logger.log("Removed_point: " + model.getShapes().get(i).toString());
+					} else if(model.getShapes().get(i) instanceof Line) {
+						logger.log("Removed_line: " + model.getShapes().get(i).toString());
+					} else if(model.getShapes().get(i) instanceof Circle) {
+						logger.log("Removed_circle: " + model.getShapes().get(i).toString());
+					} else if(model.getShapes().get(i) instanceof Rectangle) {
+						logger.log("Removed_rectangle: " + model.getShapes().get(i).toString());
+					} else if(model.getShapes().get(i) instanceof Donut) {
+						logger.log("Removed_donut: " + model.getShapes().get(i).toString());
+					} else if(model.getShapes().get(i) instanceof HexagonAdapter) {
+						logger.log("Removed_hexagon: " + model.getShapes().get(i).toString());
+					}
 					removeShapeCmd.execute();
 					commands.add(removeShapeCmd);
+				
+					
+					temp.clear();
 					//numOfSelectedShapes--;
 					frame.repaint();
 					setSelect(true);
@@ -393,7 +509,7 @@ public class DrawingController {
 			setSelect(true);
 		}
 		else {
-			ArrayList<Shape> temp = new ArrayList();
+			ArrayList<Shape> temporary = new ArrayList();
 			int option =JOptionPane.showConfirmDialog(null, "Are you sure you want to delete all of selected shapes?", "Warning message", JOptionPane.YES_NO_OPTION);
 			if(option==JOptionPane.YES_OPTION) {
 				for(int i=0;i<model.getShapes().size();i++) {
@@ -401,18 +517,33 @@ public class DrawingController {
 						
 						//model.getShapes().remove(i);
 						//frame.repaint();
-						temp.add(model.getShapes().get(i));
+						temporary.add(model.getShapes().get(i));
 					}
 					else {
-						//RemoveShapeCmd removeShapeCmd = new RemoveShapeCmd(model,model.getShapes().get(i));
+						RemoveShapeCmd removeShapeCmd = new RemoveShapeCmd(model,model.getShapes().get(i));
+						model.getShapes().get(i).setSelected(false);
 						//removeShapeCmd.execute();
-						//commands.add(removeShapeCmd);
+						commands.add(removeShapeCmd);
+						if(model.getShapes().get(i) instanceof Point) {
+							logger.log("Removed_point: " + model.getShapes().get(i).toString());
+						} else if(model.getShapes().get(i) instanceof Line) {
+							logger.log("Removed_line: " + model.getShapes().get(i).toString());
+						} else if(model.getShapes().get(i) instanceof Circle) {
+							logger.log("Removed_circle: " + model.getShapes().get(i).toString());
+						} else if(model.getShapes().get(i) instanceof Rectangle) {
+							logger.log("Removed_rectangle: " + model.getShapes().get(i).toString());
+						} else if(model.getShapes().get(i) instanceof Donut) {
+							logger.log("Removed_donut: " + model.getShapes().get(i).toString());
+						} else if(model.getShapes().get(i) instanceof HexagonAdapter) {
+							logger.log("Removed_hexagon: " + model.getShapes().get(i).toString());
+						}
 					}
 				}
+				temp.clear();
 				model.getShapes().clear();
 			
-				for(int i=0;i<temp.size();i++) {
-					model.getShapes().add(temp.get(i));
+				for(int i=0;i<temporary.size();i++) {
+					model.getShapes().add(temporary.get(i));
 					
 				}
 				//numOfSelectedShapes=0;
@@ -469,6 +600,8 @@ public class DrawingController {
 							updatePointCmd = new UpdatePointCmd(p2,p);
 							commands.add(updatePointCmd);
 							updatePointCmd.execute();
+							logger.log("Modify_point: " + p.toString());
+							temp.clear();
 							//model.getShapes().remove(i);
 							
 							//model.getShapes().add(p);
@@ -514,6 +647,8 @@ public class DrawingController {
 						
 							
 							updateLineCmd.execute();
+							logger.log("Modify_line: " + l2.toString());
+							temp.clear();
 							
 							l2.setSelected(true);
 							frame.repaint();
@@ -556,6 +691,8 @@ public class DrawingController {
 							updateRectCmd=new UpdateRectangleCmd(r1,r2);
 							commands.add(updateRectCmd);
 							updateRectCmd.execute();
+							logger.log("Modify_rectangle: " + r2.toString());
+							temp.clear();
 							//model.getShapes().remove(i);
 							
 							//model.getShapes().add(r2);
@@ -598,6 +735,8 @@ public class DrawingController {
 							updateCircleCmd = new UpdateCircleCmd(c1,c2);
 							commands.add(updateCircleCmd);
 							updateCircleCmd.execute();
+							logger.log("Modify_circle: " + c2.toString());
+							temp.clear();
 							//model.getShapes().remove(i);
 							
 							//model.getShapes().add(c2);
@@ -639,6 +778,8 @@ public class DrawingController {
 							updateDonutCmd = new UpdateDonutCmd(d1,d2);
 							commands.add(updateDonutCmd);
 							updateDonutCmd.execute();
+							logger.log("Modify_donut: " + d2.toString());
+							temp.clear();
 							//model.getShapes().remove(i);
 						
 							
@@ -687,6 +828,8 @@ public class DrawingController {
 								updateHexagonCmd=new UpdateHexagonCmd(h1,ha);
 								commands.add(updateHexagonCmd);
 								updateHexagonCmd.execute();
+								logger.log("Modify_hexagon: " + ha.toString());
+								temp.clear();
 								ha.setSelected(true);
 								frame.repaint();
 							}
@@ -709,37 +852,63 @@ public class DrawingController {
 	
 	public void undo() {
 		if(commands.size()!=0) {
+			logger.log("Undo: " + commands.get(commands.size()-1));
+			commands.get(commands.size()-1).unexecute();
+			temp.add(commands.get(commands.size()-1));
+			commands.remove(commands.size()-1);
 			
-				commands.get(commands.size()-1).unexecute();
-				temp.add(commands.get(commands.size()-1));
-				commands.remove(commands.size()-1);
-				frame.repaint();
-			
-	
-		}
-		else {
-			JOptionPane.showMessageDialog(null, "Nema komandi");
-			//frame.getBtnUndo().setEnabled(false);
-		}
+			frame.repaint();
+		
+
+	}
+	else {
+		JOptionPane.showMessageDialog(null, "Nema komandi");
+		//frame.getBtnUndo().setEnabled(false);
+	}
 		
 	}
 	
 	public void redo() {
 		if(temp.size()!=0) {
-		commands.add(temp.get(temp.size()-1));
-		temp.remove(temp.get(temp.size()-1));
-		commands.get(commands.size()-1).execute();
-		
-		frame.repaint();
-		}
-		else {
-			JOptionPane.showMessageDialog(null, "Nema komandi");
-			return;
-			//frame.getBtnRedo().setEnabled(false);
-		}
+			
+			commands.add(temp.get(temp.size()-1));
+			logger.log("Redo: " + temp.get(temp.size()-1));
+			temp.remove(temp.get(temp.size()-1));
+			
+			commands.get(commands.size()-1).execute();
+			
+			
+			frame.repaint();
+			}
+			else {
+				JOptionPane.showMessageDialog(null, "Nema komandi");
+				return;
+				//frame.getBtnRedo().setEnabled(false);
+			}
 	}
 
 	public void toFront() {
+		if(model.getShapes().size()==0) {
+			JOptionPane.showMessageDialog(null, "List of shapes is empty!");
+			return;
+		}
+		else if(selectedShapes.size()==0) {
+			JOptionPane.showMessageDialog(null, "List of selected shapes is empty!");
+			return;
+		}
+		else if(selectedShapes.size()>1) {
+			JOptionPane.showMessageDialog(null, "List of selected shapes contains more than 1 shape!");
+			return;
+		}
+		else if(selectedShapes.size()==1) {
+			toFrontCmd = new ToFrontCmd(model,selectedShapes.get(selectedShapes.size()-1));
+			commands.add(toFrontCmd);
+			logger.log("To_front: " + selectedShapes.get(selectedShapes.size()-1));
+			toFrontCmd.execute();
+			
+			
+		}
+		/*
 		for(int i=0;i<model.getShapes().size();i++) {
 			
 			if(model.getShapes().get(i).isSelected()) {
@@ -758,11 +927,33 @@ public class DrawingController {
 		}
 		
 	}
+	*/
 		frame.repaint();
 }
 	
 	public void toBack() {
-	for(int i=0;i<model.getShapes().size();i++) {
+		if(model.getShapes().size()==0) {
+			JOptionPane.showMessageDialog(null, "List of shapes is empty!");
+			return;
+		}
+		else if(selectedShapes.size()==0) {
+			JOptionPane.showMessageDialog(null, "List of selected shapes is empty!");
+			return;
+		}
+		else if(selectedShapes.size()>1) {
+			JOptionPane.showMessageDialog(null, "List of selected shapes contains more than 1 shape!");
+			return;
+		}
+		else if(selectedShapes.size()==1){
+			toBackCmd= new ToBackCmd(model,selectedShapes.get(selectedShapes.size()-1));
+			commands.add(toBackCmd);
+			logger.log("To_back: " + selectedShapes.get(selectedShapes.size()-1));
+			toBackCmd.execute();
+			
+		}
+		
+	/*
+		for(int i=0;i<model.getShapes().size();i++) {
 			
 			if(model.getShapes().get(i).isSelected()) {
 				Shape s = model.getShapes().get(i);
@@ -779,12 +970,31 @@ public class DrawingController {
 			
 		}
 		
-	}
+	}*/
 		frame.repaint();
 		
 	}
 	
 	public void bringToFront() {
+		if(model.getShapes().size()==0) {
+			JOptionPane.showMessageDialog(null, "List of shapes is empty!");
+			return;
+		}
+		else if(selectedShapes.size()==0) {
+			JOptionPane.showMessageDialog(null, "List of selected shapes is empty!");
+			return;
+		}
+		else if(selectedShapes.size()>1) {
+			JOptionPane.showMessageDialog(null, "List of selected shapes contains more than 1 shape!");
+			return;
+		}
+		else if(selectedShapes.size()==1) {
+			bringToFrontCmd = new BringToFrontCmd(model,selectedShapes.get(selectedShapes.size()-1));
+			commands.add(bringToFrontCmd);
+			logger.log("Bring_to_front: " + selectedShapes.get(selectedShapes.size()-1));
+			bringToFrontCmd.execute();
+			
+		}/*
 		for(int i=0;i<model.getShapes().size();i++) {
 			
 			if(model.getShapes().get(i).isSelected()) {
@@ -796,7 +1006,7 @@ public class DrawingController {
 			
 			
 		}
-		//model.getShapes().remove(s);
+		//model.getShapes().remove(s);*/
 		frame.repaint();
 		
 		
@@ -804,7 +1014,7 @@ public class DrawingController {
 	}
 	
 	public void bringToBack() {
-		
+		/*
 		for(int i=0;i<model.getShapes().size();i++) {
 			if(model.getShapes().get(i).isSelected()) {
 				Shape s = model.getShapes().get(i);
@@ -814,11 +1024,42 @@ public class DrawingController {
 			}
 			
 		}
-		
+		*/
+		if(model.getShapes().size()==0) {
+			JOptionPane.showMessageDialog(null, "List of shapes is empty!");
+			return;
+		}
+		else if(selectedShapes.size()==0) {
+			JOptionPane.showMessageDialog(null, "List of selected shapes is empty!");
+			return;
+		}
+		else if(selectedShapes.size()>1) {
+			JOptionPane.showMessageDialog(null, "List of selected shapes contains more than 1 shape!");
+			return;
+		}
+		else if(selectedShapes.size()==1) {
+			bringToBackCmd = new BringToBackCmd(model,selectedShapes.get(selectedShapes.size()-1)); 
+			commands.add(bringToBackCmd);
+			logger.log("Bring_to_back: " + selectedShapes.get(selectedShapes.size()-1));
+			bringToBackCmd.execute();
+			
+		}
 		frame.repaint();
 		
 	}
 	
+	public void addPropertyChangeListener(PropertyChangeListener pcl) {
+		propertyChangeSupport.addPropertyChangeListener(pcl);
+	}
+	
+	public void removePropertyChangeListener(PropertyChangeListener pcl) {
+		propertyChangeSupport.removePropertyChangeListener(pcl);
+	}
+	
+	public void save() {
+		Save save = new Save(logger);
+		save.saveLog();
+	}
 	
 	
 	public boolean isSelect() {

@@ -129,6 +129,8 @@ public class Rectangle extends ShapeShape implements Cloneable{
 	public Rectangle clone() {
 		Rectangle rectangle = new Rectangle();
 		
+		rectangle.setUpperLeftPoint(new Point());
+		
 		rectangle.getUpperLeftPoint().setX(this.getUpperLeftPoint().getX());
 		rectangle.getUpperLeftPoint().setY(this.getUpperLeftPoint().getY());
 		rectangle.setHeight(this.getHeight());

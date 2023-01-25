@@ -10,6 +10,7 @@ public class DrawingApp {
 		frame.getView().setModel(model);
 		DrawingController controller = new DrawingController(model, frame);
 		frame.setDrawingController(controller);
+		controller.addPropertyChangeListener(frame);
 		
 		frame.setSize(900, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
