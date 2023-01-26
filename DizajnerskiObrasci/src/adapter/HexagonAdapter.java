@@ -107,6 +107,10 @@ public class HexagonAdapter extends ShapeShape implements Cloneable{
 		
 	}
 	
+	public String toString() {
+		return "Center: " + "[" + getX() + "," + getY() + "]" + ", radius: " + getR(); 
+	}
+	
 	public HexagonAdapter clone() {
 		HexagonAdapter hexagonAdapter=new HexagonAdapter();
 		

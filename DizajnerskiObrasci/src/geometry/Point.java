@@ -99,7 +99,7 @@ public class Point extends Shape implements Cloneable{
 	}
 
 	public String toString() {
-		return "(" + x + "," + y + ")";
+		return "[" + x + "," + y + "]";
 	}
 	
 	public Point clone() {

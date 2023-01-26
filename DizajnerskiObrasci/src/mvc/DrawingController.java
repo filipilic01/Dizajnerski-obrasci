@@ -41,7 +41,7 @@ import geometry.Rectangle;
 import geometry.Shape;
 import hexagon.Hexagon;
 import strategy.Logger;
-import strategy.Save;
+import strategy.SaveLoad;
 
 
 public class DrawingController {
@@ -80,6 +80,8 @@ public class DrawingController {
 	private DrawingFrame frame;
 	private PropertyChangeSupport propertyChangeSupport;
 	private Logger logger;
+	private int lineNumber;
+	private String[] strLog;
 	
 	public DrawingController(DrawingModel model, DrawingFrame frame) {
 		this.model = model;
@@ -403,6 +405,7 @@ public class DrawingController {
 		else if(selectedShapes.size()>1){
 			propertyChangeSupport.firePropertyChange("Delete enable", false, selectedShapes != null && selectedShapes.size() == 1);
 			propertyChangeSupport.firePropertyChange("Modify disabled", selectedShapes == null, selectedShapes != null);
+			
 		}
 		
 	}
@@ -1057,8 +1060,81 @@ public class DrawingController {
 	}
 	
 	public void save() {
-		Save save = new Save(logger);
+		SaveLoad save = new SaveLoad(logger);
 		save.saveLog();
+	}
+	
+	public void load() {
+		SaveLoad load = new SaveLoad(logger);
+		load.loadFile();
+		frame.getBtnExecute().setEnabled(true);
+		strLog= logger.getTextArea().getText().split("\n");
+		lineNumber=0;
+	}
+	
+	public void executeCommand() {
+		
+		String s = strLog[lineNumber];
+		if(s.contains("Added_point")) {
+			String [] split = s.split(",|\\[|\\]");
+			Point p = new Point(Integer.parseInt(split[1]),Integer.parseInt(split[2]));
+			AddShapeCmd addShape = new AddShapeCmd(model,p);
+			addShape.execute();
+			
+			///logger.log("Added_point: " + p.toString());
+		}
+		else if(s.contains("Added_line")) {
+			String []split =s.split(",|\\[|\\]");
+			Line l = new Line(new Point(Integer.parseInt(split[1]),Integer.parseInt(split[2])), new Point(Integer.parseInt(split[4]),Integer.parseInt(split[5])));
+			AddShapeCmd addShape = new AddShapeCmd(model,l);
+			addShape.execute();
+		}
+		else if(s.contains("Added_rectangle")) {
+			String []split =s.split(",|\\[|\\]|\\=|\\ ");
+			Rectangle r = new Rectangle(new Point(Integer.parseInt(split[4]), Integer.parseInt(split[5])), Integer.parseInt(split[11]), Integer.parseInt(split[15]));
+			AddShapeCmd addShape = new AddShapeCmd(model,r);
+			addShape.execute();
+		}
+		else if(s.contains("Added_circle")) {
+			String []split =s.split(",|\\[|\\]|\\=|\\ ");
+			/*System.out.println(split[0]);
+			System.out.println(split[1]);
+			System.out.println(split[2]);
+			System.out.println(split[3]);
+			System.out.println(split[4]);
+			System.out.println(split[5]);
+			System.out.println(split[6]);
+			System.out.println(split[7]);
+			System.out.println(split[8]);
+			System.out.println(split[9]);
+			System.out.println(split[10]);
+			System.out.println(split[11]);
+			System.out.println(split[12]);
+			System.out.println(split[13]);
+			System.out.println(split[14]);
+			System.out.println(split[15]);*/
+			Circle c = new Circle(new Point(Integer.parseInt(split[3]),Integer.parseInt(split[4])), Integer.parseInt(split[8]));
+			AddShapeCmd addShape = new AddShapeCmd(model,c);
+			addShape.execute();
+		}
+		else if(s.contains("Added_donut")) {
+			String []split =s.split(",|\\[|\\]|\\=|\\ ");
+			Donut d = new Donut(new Point(Integer.parseInt(split[3]), Integer.parseInt(split[4])), Integer.parseInt(split[8]), Integer.parseInt(split[11]));
+			AddShapeCmd addShape = new AddShapeCmd(model,d);
+			addShape.execute();
+		}
+		else if(s.contains("Added_hexagon")) {
+			String []split =s.split(",|\\[|\\]|\\=|\\ ");
+			Hexagon h = new Hexagon(Integer.parseInt(split[3]), Integer.parseInt(split[4]), Integer.parseInt(split[8]));
+			HexagonAdapter ha = new HexagonAdapter(h);
+			AddShapeCmd addShape = new AddShapeCmd(model,ha);
+			addShape.execute();
+		}
+		frame.repaint();
+		
+		
+		lineNumber++;
+	
 	}
 	
 	

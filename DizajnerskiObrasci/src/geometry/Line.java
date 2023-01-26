@@ -95,7 +95,7 @@ public class Line extends Shape implements Cloneable{
 	}
 
 	public String toString() {
-		return startPoint + "-- >" + endPoint;
+		return startPoint + " - " + endPoint;
 	}
 	
 	public Line clone() {

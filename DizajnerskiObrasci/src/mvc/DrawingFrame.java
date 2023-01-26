@@ -63,6 +63,8 @@ public class DrawingFrame extends JFrame implements PropertyChangeListener{
 	private JButton btnSave;
 	private JTextArea textArea_1;
 	private JScrollPane scrollPane= new JScrollPane();
+	private JButton btnLoad;
+	private JButton btnExecute;
 	
 	
 	
@@ -101,44 +103,97 @@ public class DrawingFrame extends JFrame implements PropertyChangeListener{
 		JPanel pnlNorth = new JPanel();
 		
 		contentPane.add(pnlNorth, BorderLayout.NORTH);
+		GridBagLayout gbl_pnlNorth = new GridBagLayout();
+		gbl_pnlNorth.columnWidths = new int[]{178, 178, 178, 178, 178, 0};
+		gbl_pnlNorth.rowHeights = new int[]{25, 25, 0};
+		gbl_pnlNorth.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_pnlNorth.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
+		pnlNorth.setLayout(gbl_pnlNorth);
 		
 		tglbtnPoint = new JToggleButton("Point");
-
-		pnlNorth.setLayout(new GridLayout(0, 5, 0, 0));
 		buttonGroup.add(tglbtnPoint);
-		pnlNorth.add(tglbtnPoint);
+		GridBagConstraints gbc_tglbtnPoint = new GridBagConstraints();
+		gbc_tglbtnPoint.fill = GridBagConstraints.BOTH;
+		gbc_tglbtnPoint.insets = new Insets(0, 0, 5, 5);
+		gbc_tglbtnPoint.gridx = 0;
+		gbc_tglbtnPoint.gridy = 0;
+		pnlNorth.add(tglbtnPoint, gbc_tglbtnPoint);
 		
 		tglbtnLine = new JToggleButton("Line");
-	
-		buttonGroup.add(tglbtnLine);
-		pnlNorth.add(tglbtnLine);
+		
+			buttonGroup.add(tglbtnLine);
+			GridBagConstraints gbc_tglbtnLine = new GridBagConstraints();
+			gbc_tglbtnLine.fill = GridBagConstraints.BOTH;
+			gbc_tglbtnLine.insets = new Insets(0, 0, 5, 5);
+			gbc_tglbtnLine.gridx = 1;
+			gbc_tglbtnLine.gridy = 0;
+			pnlNorth.add(tglbtnLine, gbc_tglbtnLine);
 		
 		tglbtnRectangle = new JToggleButton("Rectangle");
-	
-		buttonGroup.add(tglbtnRectangle);
-		pnlNorth.add(tglbtnRectangle);
+		
+			buttonGroup.add(tglbtnRectangle);
+			GridBagConstraints gbc_tglbtnRectangle = new GridBagConstraints();
+			gbc_tglbtnRectangle.fill = GridBagConstraints.BOTH;
+			gbc_tglbtnRectangle.insets = new Insets(0, 0, 5, 5);
+			gbc_tglbtnRectangle.gridx = 2;
+			gbc_tglbtnRectangle.gridy = 0;
+			pnlNorth.add(tglbtnRectangle, gbc_tglbtnRectangle);
 		
 		tglbtnCircle = new JToggleButton("Circle");
 		
 		buttonGroup.add(tglbtnCircle);
-		pnlNorth.add(tglbtnCircle);
+		GridBagConstraints gbc_tglbtnCircle = new GridBagConstraints();
+		gbc_tglbtnCircle.fill = GridBagConstraints.BOTH;
+		gbc_tglbtnCircle.insets = new Insets(0, 0, 5, 5);
+		gbc_tglbtnCircle.gridx = 3;
+		gbc_tglbtnCircle.gridy = 0;
+		pnlNorth.add(tglbtnCircle, gbc_tglbtnCircle);
 		
 		tglbtnDonut = new JToggleButton("Donut");
 		
 			buttonGroup.add(tglbtnDonut);
-			pnlNorth.add(tglbtnDonut);
-			
-			tglbtnHexagon = new JToggleButton("Hexagon");
-			
-			buttonGroup.add(tglbtnHexagon);
-			pnlNorth.add(tglbtnHexagon);
+			GridBagConstraints gbc_tglbtnDonut = new GridBagConstraints();
+			gbc_tglbtnDonut.fill = GridBagConstraints.BOTH;
+			gbc_tglbtnDonut.insets = new Insets(0, 0, 5, 0);
+			gbc_tglbtnDonut.gridx = 4;
+			gbc_tglbtnDonut.gridy = 0;
+			pnlNorth.add(tglbtnDonut, gbc_tglbtnDonut);
+		
+		tglbtnHexagon = new JToggleButton("Hexagon");
+		
+		buttonGroup.add(tglbtnHexagon);
+		GridBagConstraints gbc_tglbtnHexagon = new GridBagConstraints();
+		gbc_tglbtnHexagon.fill = GridBagConstraints.BOTH;
+		gbc_tglbtnHexagon.insets = new Insets(0, 0, 0, 5);
+		gbc_tglbtnHexagon.gridx = 0;
+		gbc_tglbtnHexagon.gridy = 1;
+		pnlNorth.add(tglbtnHexagon, gbc_tglbtnHexagon);
 		
 		JPanel pnlSouth = new JPanel();
 		contentPane.add(pnlSouth, BorderLayout.SOUTH);
+		GridBagLayout gbl_pnlSouth = new GridBagLayout();
+		gbl_pnlSouth.columnWidths = new int[]{320, 78, 81, 81, 0};
+		gbl_pnlSouth.rowHeights = new int[]{25, 0};
+		gbl_pnlSouth.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_pnlSouth.rowWeights = new double[]{0.0, Double.MIN_VALUE};
+		pnlSouth.setLayout(gbl_pnlSouth);
 		
 		tglbtnSelect = new JToggleButton("Select");
 		buttonGroup.add(tglbtnSelect);
-		pnlSouth.add(tglbtnSelect);
+		GridBagConstraints gbc_tglbtnSelect = new GridBagConstraints();
+		gbc_tglbtnSelect.anchor = GridBagConstraints.NORTHWEST;
+		gbc_tglbtnSelect.insets = new Insets(0, 0, 0, 5);
+		gbc_tglbtnSelect.gridx = 1;
+		gbc_tglbtnSelect.gridy = 0;
+		pnlSouth.add(tglbtnSelect, gbc_tglbtnSelect);
+		
+		tglbtnDelete = new JToggleButton("Delete");
+		tglbtnDelete.setEnabled(false);
+		tglbtnDelete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				controller.delete();
+			}
+		});
 		
 		tglbtnModify = new JToggleButton("Modify");
 		tglbtnModify.setEnabled(false);
@@ -148,17 +203,18 @@ public class DrawingFrame extends JFrame implements PropertyChangeListener{
 			}
 		});
 		buttonGroup.add(tglbtnModify);
-		pnlSouth.add(tglbtnModify);
-		
-		tglbtnDelete = new JToggleButton("Delete");
-		tglbtnDelete.setEnabled(false);
-		tglbtnDelete.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				controller.delete();
-			}
-		});
+		GridBagConstraints gbc_tglbtnModify = new GridBagConstraints();
+		gbc_tglbtnModify.anchor = GridBagConstraints.NORTHWEST;
+		gbc_tglbtnModify.insets = new Insets(0, 0, 0, 5);
+		gbc_tglbtnModify.gridx = 2;
+		gbc_tglbtnModify.gridy = 0;
+		pnlSouth.add(tglbtnModify, gbc_tglbtnModify);
 		buttonGroup.add(tglbtnDelete);
-		pnlSouth.add(tglbtnDelete);
+		GridBagConstraints gbc_tglbtnDelete = new GridBagConstraints();
+		gbc_tglbtnDelete.anchor = GridBagConstraints.NORTHWEST;
+		gbc_tglbtnDelete.gridx = 3;
+		gbc_tglbtnDelete.gridy = 0;
+		pnlSouth.add(tglbtnDelete, gbc_tglbtnDelete);
 		
 		
 		
@@ -297,16 +353,59 @@ public class DrawingFrame extends JFrame implements PropertyChangeListener{
 		
 		pnlEast = new JPanel();
 		contentPane.add(pnlEast, BorderLayout.EAST);
+		GridBagLayout gbl_pnlEast = new GridBagLayout();
+		gbl_pnlEast.columnWidths = new int[]{94, 0};
+		gbl_pnlEast.rowHeights = new int[]{25, 0, 0, 0};
+		gbl_pnlEast.columnWeights = new double[]{0.0, Double.MIN_VALUE};
+		gbl_pnlEast.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
+		pnlEast.setLayout(gbl_pnlEast);
 		
-		btnSave = new JButton("Save");
+		btnSave = new JButton("Save log");
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				controller.save();
 			}
 		});
-		pnlEast.add(btnSave);
+		GridBagConstraints gbc_btnSave = new GridBagConstraints();
+		gbc_btnSave.insets = new Insets(0, 0, 5, 0);
+		gbc_btnSave.anchor = GridBagConstraints.NORTHWEST;
+		gbc_btnSave.gridx = 0;
+		gbc_btnSave.gridy = 0;
+		pnlEast.add(btnSave, gbc_btnSave);
+		
+		btnLoad = new JButton("Load file");
+		btnLoad.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				controller.load();
+			}
+		});
+		GridBagConstraints gbc_btnLoad = new GridBagConstraints();
+		gbc_btnLoad.insets = new Insets(0, 0, 5, 0);
+		gbc_btnLoad.gridx = 0;
+		gbc_btnLoad.gridy = 1;
+		pnlEast.add(btnLoad, gbc_btnLoad);
+		
+		btnExecute = new JButton("Execute cmd");
+		btnExecute.setEnabled(false);
+		btnExecute.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				controller.executeCommand();
+			}
+		});
+		GridBagConstraints gbc_btnExecute = new GridBagConstraints();
+		gbc_btnExecute.gridx = 0;
+		gbc_btnExecute.gridy = 2;
+		pnlEast.add(btnExecute, gbc_btnExecute);
 		
 		//contentPane.repaint();
+	}
+
+	public JButton getBtnExecute() {
+		return btnExecute;
+	}
+
+	public void setBtnExecute(JButton btnExecute) {
+		this.btnExecute = btnExecute;
 	}
 
 	public JButton getBtnUndo() {
@@ -390,7 +489,7 @@ public class DrawingFrame extends JFrame implements PropertyChangeListener{
 				tglbtnModify.setEnabled(false);
 			}
 			
-			contentPane.repaint();
+			//contentPane.repaint();
 	}
 	
 }
