@@ -111,7 +111,7 @@ public class Circle extends ShapeShape implements Cloneable{
 
 	public String toString() {
 		// Center=(x,y), radius= radius
-		return "Center=" + center + ", radius=" + radius;
+		return "Center= [" + center.getX() + "," + center.getY() + "], radius=" + radius + ", borderColor= " + getColor().getRGB() + ", innerColor= " + getColorInner().getRGB();
 	}
 	
 	public Circle clone() {

@@ -108,7 +108,7 @@ public class HexagonAdapter extends ShapeShape implements Cloneable{
 	}
 	
 	public String toString() {
-		return "Center: " + "[" + getX() + "," + getY() + "]" + ", radius: " + getR(); 
+		return "Center: " + "[" + getX() + "," + getY() + "]" + ", radius: " + getR() + ", borderColor= " + getColor().getRGB() + ", innerColor= " + getInnerColor().getRGB(); 
 	}
 	
 	public HexagonAdapter clone() {

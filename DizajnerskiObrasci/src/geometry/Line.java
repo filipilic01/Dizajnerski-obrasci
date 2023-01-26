@@ -95,7 +95,7 @@ public class Line extends Shape implements Cloneable{
 	}
 
 	public String toString() {
-		return startPoint + " - " + endPoint;
+		return "[" + startPoint.getX() + "," + startPoint.getY() + "] - [" + endPoint.getX() + "," + endPoint.getY() + "], color= " + getColor().getRGB();
 	}
 	
 	public Line clone() {

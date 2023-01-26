@@ -123,7 +123,7 @@ public class Rectangle extends ShapeShape implements Cloneable{
 	}
 
 	public String toString() {
-		return "Upper left point:"+ upperLeftPoint+", width = "+ width +",height = "+height;
+		return "Upper left point: ["+ upperLeftPoint.getX() + "," + upperLeftPoint.getY() + "], width=" + width + ", height="+height + ", borderColor= " + getColor().getRGB() + ", innerColor= " + getColorInner().getRGB();
 	}
 	
 	public Rectangle clone() {

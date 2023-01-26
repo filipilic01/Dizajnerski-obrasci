@@ -164,10 +164,11 @@ public class DrawingController {
 			dlgHexagon.setVisible(true);
 			
 			if(dlgHexagon.isGood()) {
-				Hexagon hex = new Hexagon(e.getX(),e.getY(),Integer.parseInt(dlgHexagon.getTxtRadius().getText()));
-				hex.setBorderColor(frame.getBtnBorder().getBackground());
-				hex.setAreaColor(frame.getBtnInner().getBackground());
-				sh = new HexagonAdapter(hex);
+				HexagonAdapter ha = new HexagonAdapter(new Hexagon(e.getX(),e.getY(),Integer.parseInt(dlgHexagon.getTxtRadius().getText())));
+				//Hexagon hex = new Hexagon(e.getX(),e.getY(),Integer.parseInt(dlgHexagon.getTxtRadius().getText()));
+				ha.getHexagon().setBorderColor(frame.getBtnBorder().getBackground());
+				ha.getHexagon().setAreaColor(frame.getBtnInner().getBackground());
+				sh = ha;
 				addShapeCmd = new AddShapeCmd(model, sh);
 				//model.add(sh);
 				addShapeCmd.execute();
@@ -197,7 +198,8 @@ public class DrawingController {
 			dlgCircle.setVisible(true);
 			
 			if(dlgCircle.isGood()) {
-				Circle c=new Circle(new Point(e.getX(),e.getY()),(Integer.parseInt(dlgCircle.getTxtRadius().getText())), frame.getBtnBorder().getBackground(), frame.getBtnInner().getBackground());
+				Circle c=new Circle(new Point(e.getX(),e.getY()),(Integer.parseInt(dlgCircle.getTxtRadius().getText())), 
+						frame.getBtnBorder().getBackground(), frame.getBtnInner().getBackground());
 				addShapeCmd = new AddShapeCmd(model, c);
 				//model.add(c);
 				addShapeCmd.execute();
@@ -313,22 +315,22 @@ public class DrawingController {
 		if(shape != null) {
 			shape.setSelected(true);
 			if(shape instanceof Point) {
-				logger.log("Selected_point: " + shape.toString());
+				logger.log("Selected_point: " + shape.toString() + "," + model.getShapes().indexOf(shape));
 			}
 			else if(shape instanceof Line) {
-				logger.log("Selected_line: " + shape.toString());
-			}
-			else if(shape instanceof Circle) {
-				logger.log("Selected_circle: " + shape.toString());
-			}
-			else if(shape instanceof Rectangle) {
-				logger.log("Selected_rectangle: " + shape.toString());
+				logger.log("Selected_line: " + shape.toString() + "," + model.getShapes().indexOf(shape));
 			}
 			else if(shape instanceof Donut) {
-				logger.log("Selected_donut: " + shape.toString());
+				logger.log("Selected_donut: " + shape.toString() + "," + model.getShapes().indexOf(shape));
+			}
+			else if(shape instanceof Circle) {
+				logger.log("Selected_circle: " + shape.toString() + "," + model.getShapes().indexOf(shape));
+			}
+			else if(shape instanceof Rectangle) {
+				logger.log("Selected_rectangle: " + shape.toString() + "," + model.getShapes().indexOf(shape));
 			}
 			else if(shape instanceof HexagonAdapter) {
-				logger.log("Selected_hexagon: " + shape.toString());
+				logger.log("Selected_hexagon: " + shape.toString() + "," + model.getShapes().indexOf(shape));
 			}
 			//numOfSelectedShapes++;
 			selectedShapes.add(shape);
@@ -344,22 +346,23 @@ public class DrawingController {
 				if(model.getShapes().get(i).contains(x, y)) {
 					model.getShapes().get(i).setSelected(false);
 					if(model.getShapes().get(i) instanceof Point) {
-						logger.log("Deselected_point: " + model.getShapes().get(i).toString());
+						logger.log("Deselected_point: " + model.getShapes().get(i).toString() + "," + model.getShapes().indexOf(model.getShapes().get(i)));
 					}
 					else if(model.getShapes().get(i) instanceof Line) {
-						logger.log("Deselected_line: " + model.getShapes().get(i).toString());
-					}
-					else if(model.getShapes().get(i) instanceof Circle) {
-						logger.log("Deselected_circle: " + model.getShapes().get(i).toString());
-					}
-					else if(model.getShapes().get(i) instanceof Rectangle) {
-						logger.log("Deselected_rectangle: " + model.getShapes().get(i).toString());
+						logger.log("Deselected_line: " + model.getShapes().get(i).toString() + "," + model.getShapes().indexOf(model.getShapes().get(i)));
 					}
 					else if(model.getShapes().get(i) instanceof Donut) {
-						logger.log("Deselected_donut: " + model.getShapes().get(i).toString());
+						logger.log("Deselected_donut: " + model.getShapes().get(i).toString() + "," + model.getShapes().indexOf(model.getShapes().get(i)));
 					}
+					else if(model.getShapes().get(i) instanceof Circle) {
+						logger.log("Deselected_circle: " + model.getShapes().get(i).toString() + "," + model.getShapes().indexOf(model.getShapes().get(i)));
+					}
+					else if(model.getShapes().get(i) instanceof Rectangle) {
+						logger.log("Deselected_rectangle: " + model.getShapes().get(i).toString() + "," + model.getShapes().indexOf(model.getShapes().get(i)));
+					}
+					
 					else if(model.getShapes().get(i) instanceof HexagonAdapter) {
-						logger.log("Deselected_hexagon: " + model.getShapes().get(i).toString());
+						logger.log("Deselected_hexagon: " + model.getShapes().get(i).toString() + "," + model.getShapes().indexOf(model.getShapes().get(i)));
 					}
 					//numOfSelectedShapes--;
 					selectedShapes.remove(model.getShapes().get(i));
@@ -415,22 +418,22 @@ public class DrawingController {
 			for(int i = 0;i<shapes.size();i++) {
 				if(shapes.get(i).isSelected()) {
 					if(shapes.get(i) instanceof Point) {
-					logger.log("Deselected_point: " + model.getShapes().get(i).toString());
+					logger.log("Deselected_point: " + model.getShapes().get(i).toString() + "," + model.getShapes().indexOf(shapes.get(i)));
 				}
 				else if(shapes.get(i) instanceof Line) {
-					logger.log("Deselected_line: " + model.getShapes().get(i).toString());
-				}
-				else if(shapes.get(i) instanceof Circle) {
-					logger.log("Deselected_circle: " + model.getShapes().get(i).toString());
-				}
-				else if(shapes.get(i) instanceof Rectangle) {
-					logger.log("Deselected_rectangle: " + model.getShapes().get(i).toString());
+					logger.log("Deselected_line: " + model.getShapes().get(i).toString() + "," + model.getShapes().indexOf(shapes.get(i)));
 				}
 				else if(shapes.get(i) instanceof Donut) {
-					logger.log("Deselected_donut: " + model.getShapes().get(i).toString());
+					logger.log("Deselected_donut: " + model.getShapes().get(i).toString() + "," + model.getShapes().indexOf(shapes.get(i)));
+				}
+				else if(shapes.get(i) instanceof Circle) {
+					logger.log("Deselected_circle: " + model.getShapes().get(i).toString() + "," + model.getShapes().indexOf(shapes.get(i)));
+				}
+				else if(shapes.get(i) instanceof Rectangle) {
+					logger.log("Deselected_rectangle: " + model.getShapes().get(i).toString() + "," + model.getShapes().indexOf(shapes.get(i)));
 				}
 				else if(shapes.get(i) instanceof HexagonAdapter) {
-					logger.log("Deselected_hexagon: " + model.getShapes().get(i).toString());
+					logger.log("Deselected_hexagon: " + model.getShapes().get(i).toString() + "," + model.getShapes().indexOf(shapes.get(i)));
 				}
 				}
 				
@@ -478,12 +481,12 @@ public class DrawingController {
 						logger.log("Removed_point: " + model.getShapes().get(i).toString());
 					} else if(model.getShapes().get(i) instanceof Line) {
 						logger.log("Removed_line: " + model.getShapes().get(i).toString());
+					} else if(model.getShapes().get(i) instanceof Donut) {
+						logger.log("Removed_donut: " + model.getShapes().get(i).toString());
 					} else if(model.getShapes().get(i) instanceof Circle) {
 						logger.log("Removed_circle: " + model.getShapes().get(i).toString());
 					} else if(model.getShapes().get(i) instanceof Rectangle) {
 						logger.log("Removed_rectangle: " + model.getShapes().get(i).toString());
-					} else if(model.getShapes().get(i) instanceof Donut) {
-						logger.log("Removed_donut: " + model.getShapes().get(i).toString());
 					} else if(model.getShapes().get(i) instanceof HexagonAdapter) {
 						logger.log("Removed_hexagon: " + model.getShapes().get(i).toString());
 					}
@@ -531,12 +534,12 @@ public class DrawingController {
 							logger.log("Removed_point: " + model.getShapes().get(i).toString());
 						} else if(model.getShapes().get(i) instanceof Line) {
 							logger.log("Removed_line: " + model.getShapes().get(i).toString());
+						} else if(model.getShapes().get(i) instanceof Donut) {
+							logger.log("Removed_donut: " + model.getShapes().get(i).toString());
 						} else if(model.getShapes().get(i) instanceof Circle) {
 							logger.log("Removed_circle: " + model.getShapes().get(i).toString());
 						} else if(model.getShapes().get(i) instanceof Rectangle) {
 							logger.log("Removed_rectangle: " + model.getShapes().get(i).toString());
-						} else if(model.getShapes().get(i) instanceof Donut) {
-							logger.log("Removed_donut: " + model.getShapes().get(i).toString());
 						} else if(model.getShapes().get(i) instanceof HexagonAdapter) {
 							logger.log("Removed_hexagon: " + model.getShapes().get(i).toString());
 						}
@@ -820,11 +823,11 @@ public class DrawingController {
 								int r = (Integer.parseInt(dlgHexagon.getTxtRadius().getText()));
 								//Color c1=frame.getBtnBorder().getBackground();
 								//Color c2=frame.getBtnInner().getBackground();
-								Hexagon h = new Hexagon(dX,dY,r);
-								h.setBorderColor(frame.getBtnBorder().getBackground());
-								h.setAreaColor(frame.getBtnInner().getBackground());
+								//Hexagon h = new Hexagon(dX,dY,r);
 								
-								HexagonAdapter ha = new HexagonAdapter(h);
+								HexagonAdapter ha = new HexagonAdapter(new Hexagon(dX,dY,r));
+								ha.getHexagon().setBorderColor(frame.getBtnBorder().getBackground());
+								ha.getHexagon().setAreaColor(frame.getBtnInner().getBackground());
 								//model.getShapes().remove(i);
 								
 								//model.getShapes().add(ha);
@@ -865,7 +868,7 @@ public class DrawingController {
 
 	}
 	else {
-		JOptionPane.showMessageDialog(null, "Nema komandi");
+		JOptionPane.showMessageDialog(null, "No active commands");
 		//frame.getBtnUndo().setEnabled(false);
 	}
 		
@@ -884,7 +887,7 @@ public class DrawingController {
 			frame.repaint();
 			}
 			else {
-				JOptionPane.showMessageDialog(null, "Nema komandi");
+				JOptionPane.showMessageDialog(null, "No active commands");
 				return;
 				//frame.getBtnRedo().setEnabled(false);
 			}
@@ -1073,68 +1076,351 @@ public class DrawingController {
 	}
 	
 	public void executeCommand() {
+	
+		if(lineNumber==strLog.length) {
+			JOptionPane.showMessageDialog(null, "Loading file is done!");
+		}
+		else {
+			
 		
 		String s = strLog[lineNumber];
+		/*-------------------------------------------------------------------------------------------------------ADDED---------------------------------------------*/
 		if(s.contains("Added_point")) {
-			String [] split = s.split(",|\\[|\\]");
-			Point p = new Point(Integer.parseInt(split[1]),Integer.parseInt(split[2]));
+			String [] split = s.split(",|\\[|\\]|\\=|\\ ");	
+			Point p = new Point(Integer.parseInt(split[2]),Integer.parseInt(split[3]), new Color(Integer.parseInt(split[8])));
 			AddShapeCmd addShape = new AddShapeCmd(model,p);
+			commands.add(addShape);
 			addShape.execute();
 			
-			///logger.log("Added_point: " + p.toString());
+			logger.log("Added_point: " + p.toString());
 		}
 		else if(s.contains("Added_line")) {
-			String []split =s.split(",|\\[|\\]");
-			Line l = new Line(new Point(Integer.parseInt(split[1]),Integer.parseInt(split[2])), new Point(Integer.parseInt(split[4]),Integer.parseInt(split[5])));
+			String []split =s.split(",|\\[|\\]|\\=|\\ ");
+			Line l = new Line(new Point(Integer.parseInt(split[2]),Integer.parseInt(split[3])), new Point(Integer.parseInt(split[7]),
+					Integer.parseInt(split[8])), new Color(Integer.parseInt(split[13])));
 			AddShapeCmd addShape = new AddShapeCmd(model,l);
+			commands.add(addShape);
 			addShape.execute();
+			logger.log("Added_line: " + l.toString());
+			
 		}
 		else if(s.contains("Added_rectangle")) {
 			String []split =s.split(",|\\[|\\]|\\=|\\ ");
-			Rectangle r = new Rectangle(new Point(Integer.parseInt(split[4]), Integer.parseInt(split[5])), Integer.parseInt(split[11]), Integer.parseInt(split[15]));
+	
+			Rectangle r = new Rectangle(new Point(Integer.parseInt(split[5]), Integer.parseInt(split[6])), Integer.parseInt(split[10]), 
+					Integer.parseInt(split[13]), new Color(Integer.parseInt(split[17])), new Color(Integer.parseInt(split[21])));
 			AddShapeCmd addShape = new AddShapeCmd(model,r);
+			commands.add(addShape);
 			addShape.execute();
-		}
-		else if(s.contains("Added_circle")) {
-			String []split =s.split(",|\\[|\\]|\\=|\\ ");
-			/*System.out.println(split[0]);
-			System.out.println(split[1]);
-			System.out.println(split[2]);
-			System.out.println(split[3]);
-			System.out.println(split[4]);
-			System.out.println(split[5]);
-			System.out.println(split[6]);
-			System.out.println(split[7]);
-			System.out.println(split[8]);
-			System.out.println(split[9]);
-			System.out.println(split[10]);
-			System.out.println(split[11]);
-			System.out.println(split[12]);
-			System.out.println(split[13]);
-			System.out.println(split[14]);
-			System.out.println(split[15]);*/
-			Circle c = new Circle(new Point(Integer.parseInt(split[3]),Integer.parseInt(split[4])), Integer.parseInt(split[8]));
-			AddShapeCmd addShape = new AddShapeCmd(model,c);
-			addShape.execute();
+			logger.log("Added_rectangle: " + r.toString());
 		}
 		else if(s.contains("Added_donut")) {
 			String []split =s.split(",|\\[|\\]|\\=|\\ ");
-			Donut d = new Donut(new Point(Integer.parseInt(split[3]), Integer.parseInt(split[4])), Integer.parseInt(split[8]), Integer.parseInt(split[11]));
+			Donut d = new Donut(new Point(Integer.parseInt(split[4]), Integer.parseInt(split[5])), Integer.parseInt(split[9]), Integer.parseInt(split[20]),
+					new Color(Integer.parseInt(split[13])), new Color(Integer.parseInt(split[17])));
 			AddShapeCmd addShape = new AddShapeCmd(model,d);
+			commands.add(addShape);
 			addShape.execute();
+			logger.log("Added_donut: " + d.toString());
+		}
+		else if(s.contains("Added_circle")) {
+			String []split =s.split(",|\\[|\\]|\\=|\\ ");
+			
+			Circle c = new Circle(new Point(Integer.parseInt(split[4]),Integer.parseInt(split[5])), Integer.parseInt(split[9])
+					,new Color(Integer.parseInt(split[13])), new Color(Integer.parseInt(split[17])));
+			AddShapeCmd addShape = new AddShapeCmd(model,c);
+			commands.add(addShape);
+			addShape.execute();
+			logger.log("Added_circle: " + c.toString());
 		}
 		else if(s.contains("Added_hexagon")) {
 			String []split =s.split(",|\\[|\\]|\\=|\\ ");
-			Hexagon h = new Hexagon(Integer.parseInt(split[3]), Integer.parseInt(split[4]), Integer.parseInt(split[8]));
-			HexagonAdapter ha = new HexagonAdapter(h);
+
+			HexagonAdapter ha = new HexagonAdapter(new Hexagon(Integer.parseInt(split[3]), Integer.parseInt(split[4]), Integer.parseInt(split[8])));
+			ha.getHexagon().setAreaColor(new Color(Integer.parseInt(split[16])));
+			ha.getHexagon().setBorderColor(new Color(Integer.parseInt(split[12])));
+			
 			AddShapeCmd addShape = new AddShapeCmd(model,ha);
+			commands.add(addShape);
 			addShape.execute();
+			logger.log("Added_hexagon: " + ha.toString());
 		}
+		
+		/*--------------------------------------------------------------------------SELECTED----------------------------------------------*/
+		else if(s.contains("Selected_point")){
+			String []split =s.split(",|\\[|\\]|\\=|\\ ");
+		
+			int index = Integer.parseInt(split[9]);
+			model.getShapes().get(index).setSelected(true);
+			selectedShapes.add(model.getShapes().get(index));
+			logger.log("Selected_point: " + model.getShapes().get(index).toString());
+		}
+
+		else if(s.contains("Selected_line")){
+			String []split =s.split(",|\\[|\\]|\\=|\\ ");
+		
+			int index = Integer.parseInt(split[14]);
+			model.getShapes().get(index).setSelected(true);
+			selectedShapes.add(model.getShapes().get(index));
+			logger.log("Selected_line: " + model.getShapes().get(index).toString());
+		}
+
+		else if(s.contains("Selected_rectangle")){
+			String []split =s.split(",|\\[|\\]|\\=|\\ ");
+		
+			int index = Integer.parseInt(split[22]);
+			model.getShapes().get(index).setSelected(true);
+			selectedShapes.add(model.getShapes().get(index));
+			logger.log("Selected_rectangle: " + model.getShapes().get(index).toString());
+		}
+		else if(s.contains("Selected_donut")){
+			String []split =s.split(",|\\[|\\]|\\=|\\ ");
+		
+			int index = Integer.parseInt(split[21]);
+			model.getShapes().get(index).setSelected(true);
+			selectedShapes.add(model.getShapes().get(index));
+			logger.log("Selected_donut: " + model.getShapes().get(index).toString());
+		}
+		else if(s.contains("Selected_circle")){
+			String []split =s.split(",|\\[|\\]|\\=|\\ ");
+		
+			int index = Integer.parseInt(split[18]);
+			model.getShapes().get(index).setSelected(true);
+			selectedShapes.add(model.getShapes().get(index));
+			logger.log("Selected_circle: " + model.getShapes().get(index).toString());
+		}
+
+		else if(s.contains("Selected_hexagon")){
+			String []split =s.split(",|\\[|\\]|\\=|\\ ");
+		
+			int index = Integer.parseInt(split[17]);
+			model.getShapes().get(index).setSelected(true);
+			selectedShapes.add(model.getShapes().get(index));
+			logger.log("Selected_hexagon: " + model.getShapes().get(index).toString());
+		}
+		/*-----------------------------------------------------------------DESELECTED------------------------------------------------------------------*/
+		
+		else if(s.contains("Deselected_point")) {
+			String []split =s.split(",|\\[|\\]|\\=|\\ ");
+			
+			int index = Integer.parseInt(split[9]);
+			model.getShapes().get(index).setSelected(false);
+			selectedShapes.remove(model.getShapes().get(index));
+			logger.log("Deselected_point: " + model.getShapes().get(index).toString());
+		}
+		else if(s.contains("Deselected_line")) {
+			String []split =s.split(",|\\[|\\]|\\=|\\ ");
+			
+			int index = Integer.parseInt(split[14]);
+			model.getShapes().get(index).setSelected(false);
+			selectedShapes.remove(model.getShapes().get(index));
+			logger.log("Deselected_line: " + model.getShapes().get(index).toString());
+		}
+		else if(s.contains("Deselected_donut")) {
+			String []split =s.split(",|\\[|\\]|\\=|\\ ");
+			
+			int index = Integer.parseInt(split[21]);
+			model.getShapes().get(index).setSelected(false);
+			selectedShapes.remove(model.getShapes().get(index));
+			logger.log("Deselected_donut: " + model.getShapes().get(index).toString());
+		}
+		else if(s.contains("Deselected_rectangle")) {
+			String []split =s.split(",|\\[|\\]|\\=|\\ ");
+			
+			int index = Integer.parseInt(split[22]);
+			model.getShapes().get(index).setSelected(false);
+			selectedShapes.remove(model.getShapes().get(index));
+			logger.log("Deselected_rectangle: " + model.getShapes().get(index).toString());
+		}
+		else if(s.contains("Deselected_circle")) {
+			String []split =s.split(",|\\[|\\]|\\=|\\ ");
+			
+			int index = Integer.parseInt(split[18]);
+			model.getShapes().get(index).setSelected(false);
+			selectedShapes.remove(model.getShapes().get(index));
+			logger.log("Deselected_circle: " + model.getShapes().get(index).toString());
+		}
+		else if(s.contains("Deselected_hexagon")) {
+			String []split =s.split(",|\\[|\\]|\\=|\\ ");
+			
+			int index = Integer.parseInt(split[17]);
+			model.getShapes().get(index).setSelected(false);
+			selectedShapes.remove(model.getShapes().get(index));
+			logger.log("Deselected_hexagon: " + model.getShapes().get(index).toString());
+		}
+		
+		/*--------------------------------------------------------------------------REMOVED-----------------------------------------------*/
+		else if(s.contains("Removed_point")) {
+			String []split =s.split(",|\\[|\\]|\\=|\\ ");
+			
+			Point p = new Point(Integer.parseInt(split[2]),Integer.parseInt(split[3]), new Color(Integer.parseInt(split[8])));
+			RemoveShapeCmd removeShape = new RemoveShapeCmd(model,p);
+			selectedShapes.remove(p);
+			commands.add(removeShape);
+			removeShape.execute();
+			logger.log("Removed_point: " + p.toString());
+		}
+		else if(s.contains("Removed_line")) {
+			String []split =s.split(",|\\[|\\]|\\=|\\ ");
+			
+			Line l = new Line(new Point(Integer.parseInt(split[2]),Integer.parseInt(split[3])), new Point(Integer.parseInt(split[7]),
+					Integer.parseInt(split[8])), new Color(Integer.parseInt(split[13])));
+			RemoveShapeCmd removeShape = new RemoveShapeCmd(model,l);
+			selectedShapes.remove(l);
+			commands.add(removeShape);
+			removeShape.execute();
+			logger.log("Removed_line: " + l.toString());
+		}
+		else if(s.contains("Removed_donut")) {
+			String []split =s.split(",|\\[|\\]|\\=|\\ ");
+			Donut d = new Donut(new Point(Integer.parseInt(split[4]), Integer.parseInt(split[5])), Integer.parseInt(split[9]), Integer.parseInt(split[20]),
+					new Color(Integer.parseInt(split[13])), new Color(Integer.parseInt(split[17])));
+			RemoveShapeCmd removeShape = new RemoveShapeCmd(model,d);
+			selectedShapes.remove(d);
+			commands.add(removeShape);
+			removeShape.execute();
+			logger.log("Removed_donut: " + d.toString());
+		}
+		else if(s.contains("Removed_circle")) {
+			String []split =s.split(",|\\[|\\]|\\=|\\ ");
+			Circle c = new Circle(new Point(Integer.parseInt(split[4]),Integer.parseInt(split[5])), Integer.parseInt(split[9])
+					,new Color(Integer.parseInt(split[13])), new Color(Integer.parseInt(split[17])));
+			RemoveShapeCmd removeShape = new RemoveShapeCmd(model,c);
+			selectedShapes.remove(c);
+			commands.add(removeShape);
+			removeShape.execute();
+			logger.log("Removed_circle: " + c.toString());
+		}
+		else if(s.contains("Removed_rectangle")) {
+			String []split =s.split(",|\\[|\\]|\\=|\\ ");
+
+			Rectangle r = new Rectangle(new Point(Integer.parseInt(split[5]), Integer.parseInt(split[6])), Integer.parseInt(split[10]), 
+					Integer.parseInt(split[13]), new Color(Integer.parseInt(split[17])), new Color(Integer.parseInt(split[21])));
+			RemoveShapeCmd removeShape = new RemoveShapeCmd(model,r);
+			selectedShapes.remove(r);
+			commands.add(removeShape);
+			removeShape.execute();
+			logger.log("Removed_rectangle: " + r.toString());
+		}
+		else if(s.contains("Removed_hexagon")) {
+			String []split =s.split(",|\\[|\\]|\\=|\\ ");
+			HexagonAdapter ha = new HexagonAdapter(new Hexagon(Integer.parseInt(split[3]), Integer.parseInt(split[4]), Integer.parseInt(split[8])));
+			ha.getHexagon().setAreaColor(new Color(Integer.parseInt(split[16])));
+			ha.getHexagon().setBorderColor(new Color(Integer.parseInt(split[12])));
+			RemoveShapeCmd removeShape = new RemoveShapeCmd(model,(Shape)ha);
+			selectedShapes.remove(ha);
+			commands.add(removeShape);
+			removeShape.execute();
+			logger.log("Removed_hexagon: " + ha.toString());
+			
+		}
+		
+		/*-----------------------------------------------------------------------MODIFY--------------------------------------------------------*/
+		else if(s.contains("Modify_point")) {
+			String []split =s.split(",|\\[|\\]|\\=|\\ ");
+			Point p1 = (Point)selectedShapes.get(selectedShapes.size()-1);
+			Point p2 = new Point(Integer.parseInt(split[2]),Integer.parseInt(split[3]), new Color(Integer.parseInt(split[8])));
+			UpdatePointCmd updatePointCmd = new UpdatePointCmd(p1,p2);
+			commands.add(updatePointCmd);
+			updatePointCmd.execute();
+			logger.log("Modify_point: " + p2.toString());
+		}
+		else if(s.contains("Modify_line")) {
+			String []split =s.split(",|\\[|\\]|\\=|\\ ");
+			Line l1 = (Line)selectedShapes.get(selectedShapes.size()-1);
+			Line l2 = new Line(new Point(Integer.parseInt(split[2]),Integer.parseInt(split[3])), new Point(Integer.parseInt(split[7]),
+					Integer.parseInt(split[8])), new Color(Integer.parseInt(split[13])));
+			UpdateLineCmd updateLineCmd = new UpdateLineCmd(l1,l2);
+			commands.add(updateLineCmd);
+			updateLineCmd.execute();
+			logger.log("Modify_line: " + l2.toString());
+			
+		}
+		else if(s.contains("Modify_donut")) {
+			String []split =s.split(",|\\[|\\]|\\=|\\ ");
+			Donut d1 = (Donut)selectedShapes.get(selectedShapes.size()-1);
+			Donut d2 = new Donut(new Point(Integer.parseInt(split[4]), Integer.parseInt(split[5])), Integer.parseInt(split[9]), Integer.parseInt(split[20]),
+					new Color(Integer.parseInt(split[13])), new Color(Integer.parseInt(split[17])));
+			UpdateDonutCmd updateDonutCmd = new UpdateDonutCmd(d1,d2);
+			commands.add(updateDonutCmd);
+			updateDonutCmd.execute();
+			logger.log("Modify_donut: " + d2.toString());
+		}
+		else if(s.contains("Modify_circle")) {
+			String []split =s.split(",|\\[|\\]|\\=|\\ ");
+			Circle c1 = (Circle)selectedShapes.get(selectedShapes.size()-1);
+			Circle c2= new Circle(new Point(Integer.parseInt(split[4]),Integer.parseInt(split[5])), Integer.parseInt(split[9])
+					,new Color(Integer.parseInt(split[13])), new Color(Integer.parseInt(split[17])));
+			UpdateCircleCmd updateCircleCmd = new UpdateCircleCmd(c1,c2);
+			commands.add(updateCircleCmd);
+			updateCircleCmd.execute();
+			logger.log("Modify_circle: " + c2.toString());
+		}
+		else if(s.contains("Modify_hexagon")) {
+			String []split =s.split(",|\\[|\\]|\\=|\\ ");
+			HexagonAdapter ha1 = (HexagonAdapter)selectedShapes.get(selectedShapes.size()-1);
+			HexagonAdapter ha2 = new HexagonAdapter(new Hexagon(Integer.parseInt(split[3]), Integer.parseInt(split[4]), Integer.parseInt(split[8])));
+			ha2.getHexagon().setAreaColor(new Color(Integer.parseInt(split[16])));
+			ha2.getHexagon().setBorderColor(new Color(Integer.parseInt(split[12])));
+			UpdateHexagonCmd updateHexagonCmd = new UpdateHexagonCmd(ha1,ha2);
+			commands.add(updateHexagonCmd);
+			updateHexagonCmd.execute();
+			logger.log("Modify_hexagon: " + ha2.toString());
+		}
+		else if(s.contains("Modify_rectangle")) {
+			String []split =s.split(",|\\[|\\]|\\=|\\ ");
+			Rectangle r1 = (Rectangle)selectedShapes.get(selectedShapes.size()-1);
+			Rectangle r2 = new Rectangle(new Point(Integer.parseInt(split[5]), Integer.parseInt(split[6])), Integer.parseInt(split[10]), 
+					Integer.parseInt(split[13]), new Color(Integer.parseInt(split[17])), new Color(Integer.parseInt(split[21])));
+			UpdateRectangleCmd updateRectangleCmd= new UpdateRectangleCmd(r1,r2);
+			commands.add(updateRectangleCmd);
+			updateRectangleCmd.execute();
+			logger.log("Modify_rectangle: " + r2.toString());
+		}
+		
+		/*-----------------------------------------------------------------------------FRONT, BACK----------------------------------------------------*/
+		else if(s.contains("Bring_to_front")) {
+			String []split =s.split(",|\\[|\\]|\\=|\\ ");
+			BringToFrontCmd bringToFrontCmd = new BringToFrontCmd(model, selectedShapes.get(selectedShapes.size()-1));
+			commands.add(bringToFrontCmd);
+			bringToFrontCmd.execute();
+			logger.log("Bring_to_front: " + selectedShapes.get(selectedShapes.size()-1).toString());
+		}
+		else if(s.contains("Bring_to_back")) {
+			String []split =s.split(",|\\[|\\]|\\=|\\ ");
+			BringToBackCmd bringToBackCmd = new BringToBackCmd(model, selectedShapes.get(selectedShapes.size()-1));
+			commands.add(bringToBackCmd);
+			bringToBackCmd.execute();
+			logger.log("Bring_to_back: " + selectedShapes.get(selectedShapes.size()-1).toString());
+		}
+		else if(s.contains("To_front")) {
+			String []split =s.split(",|\\[|\\]|\\=|\\ ");
+			ToFrontCmd toFrontCmd = new ToFrontCmd(model, selectedShapes.get(selectedShapes.size()-1));
+			commands.add(toFrontCmd);
+			toFrontCmd.execute();
+			logger.log("To_front: " + selectedShapes.get(selectedShapes.size()-1).toString());
+		}
+		else if(s.contains("To_back")) {
+			String []split =s.split(",|\\[|\\]|\\=|\\ ");
+			ToBackCmd toBackCmd = new ToBackCmd(model, selectedShapes.get(selectedShapes.size()-1));
+			commands.add(toBackCmd);
+			toBackCmd.execute();
+			logger.log("To_back: " + selectedShapes.get(selectedShapes.size()-1).toString());
+		}
+		/*----------------------------------------------------------------------------------------UNDO, REDO--------------------------------------------------------------*/
+		else if(s.contains("Undo")) {
+			undo();
+		}
+		else if(s.contains("Redo")) {
+			redo();
+		}
+		
+		
 		frame.repaint();
 		
 		
 		lineNumber++;
-	
+		}
 	}
 	
 	
