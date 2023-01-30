@@ -12,7 +12,7 @@ public class DrawingApp {
 		frame.setDrawingController(controller);
 		controller.addPropertyChangeListener(frame);
 		
-		frame.setSize(900, 600);
+		frame.setSize(1300, 800);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 	}
