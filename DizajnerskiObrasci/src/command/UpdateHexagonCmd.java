@@ -30,7 +30,7 @@ public class UpdateHexagonCmd implements CommandShape{
 	    oldHexagon.setY(newHexagon.getY());
 	    oldHexagon.setR(newHexagon.getR());
 		oldHexagon.setColor(newHexagon.getColor());
-		oldHexagon.setInnerColor(newHexagon.getInnerColor());
+		oldHexagon.setColorInner(newHexagon.getColorInner());
 		
 	}
 
@@ -41,7 +41,7 @@ public class UpdateHexagonCmd implements CommandShape{
 		oldHexagon.setY(original.getY());
 		oldHexagon.setR(original.getR());
 		oldHexagon.setColor(original.getColor());
-		oldHexagon.setInnerColor(original.getInnerColor());
+		oldHexagon.setColorInner(original.getColorInner());
 		
 	}
 

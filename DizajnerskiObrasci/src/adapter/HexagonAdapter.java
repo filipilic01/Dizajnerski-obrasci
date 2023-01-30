@@ -56,11 +56,11 @@ public class HexagonAdapter extends ShapeShape implements Cloneable{
 		hexagon.paint(g);
 
 	}
-	public Color getInnerColor() {
+	public Color getColorInner() {
 		return hexagon.getAreaColor();
 	}
 
-	public void setInnerColor(Color innerColor) {
+	public void setColorInner(Color innerColor) {
 		
 		hexagon.setAreaColor(innerColor);
 		//super.setInnerColor(innerColor);
@@ -108,7 +108,7 @@ public class HexagonAdapter extends ShapeShape implements Cloneable{
 	}
 	
 	public String toString() {
-		return "Center: " + "[" + getX() + "," + getY() + "]" + ", radius: " + getR() + ", borderColor= " + getColor().getRGB() + ", innerColor= " + getInnerColor().getRGB(); 
+		return "Center: " + "[" + getX() + "," + getY() + "]" + ", radius: " + getR() + ", borderColor= " + getColor().getRGB() + ", innerColor= " + getColorInner().getRGB(); 
 	}
 	
 	public HexagonAdapter clone() {
@@ -120,7 +120,7 @@ public class HexagonAdapter extends ShapeShape implements Cloneable{
 		hexagonAdapter.setY(this.getY());		
 		hexagonAdapter.setR(this.getR());
 		hexagonAdapter.setColor(this.getColor());
-		hexagonAdapter.setInnerColor(this.getInnerColor());
+		hexagonAdapter.setColorInner(this.getColorInner());
 		
 		return hexagonAdapter;
 	}

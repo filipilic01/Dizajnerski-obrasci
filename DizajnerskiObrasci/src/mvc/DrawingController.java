@@ -19,12 +19,12 @@ import command.BringToBackCmd;
 import command.BringToFrontCmd;
 import command.CommandShape;
 import command.DeselectCmd;
-import command.RedoCmd;
+
 import command.RemoveShapeCmd;
 import command.SelectCmd;
 import command.ToBackCmd;
 import command.ToFrontCmd;
-import command.UndoCmd;
+
 import command.UpdateCircleCmd;
 import command.UpdateDonutCmd;
 import command.UpdateHexagonCmd;
@@ -173,14 +173,14 @@ public class DrawingController {
 			if(dlgHexagon.isGood()) {
 				HexagonAdapter ha = new HexagonAdapter(new Hexagon(e.getX(),e.getY(),Integer.parseInt(dlgHexagon.getTxtRadius().getText())));
 				//Hexagon hex = new Hexagon(e.getX(),e.getY(),Integer.parseInt(dlgHexagon.getTxtRadius().getText()));
-				ha.getHexagon().setBorderColor(frame.getBtnBorder().getBackground());
-				ha.getHexagon().setAreaColor(frame.getBtnInner().getBackground());
-				sh = ha;
-				addShapeCmd = new AddShapeCmd(model, sh);
+				ha.setColor(frame.getBtnBorder().getBackground());
+				ha.setColorInner(frame.getBtnInner().getBackground());
+			//	sh = ha;
+				addShapeCmd = new AddShapeCmd(model, ha);
 				//model.add(sh);
 				addShapeCmd.execute();
 				commands.add(addShapeCmd);
-				logger.log("Added_hexagon: " + sh.toString());
+				logger.log("Added_hexagon: " + ha.toString());
 				temp.clear();
 				frame.repaint();
 				
@@ -865,8 +865,8 @@ public class DrawingController {
 								//Hexagon h = new Hexagon(dX,dY,r);
 								
 								HexagonAdapter ha = new HexagonAdapter(new Hexagon(dX,dY,r));
-								ha.getHexagon().setBorderColor(frame.getBtnBorder().getBackground());
-								ha.getHexagon().setAreaColor(frame.getBtnInner().getBackground());
+								ha.setColor(frame.getBtnBorder().getBackground());
+								ha.setColorInner(frame.getBtnInner().getBackground());
 								//model.getShapes().remove(i);
 								
 								//model.getShapes().add(ha);
@@ -902,13 +902,14 @@ public class DrawingController {
 		
 		if(commands.size()!=0) {
 			
-			// undoCmd= new UndoCmd(commands.get(commands.size()-1));
-			//
-			//undoCmd.execute();
+		
+			//logger.log("Undo: " + commands.get(commands.size()-1));
+			//commands.get(commands.size()-1).unexecute();
 			logger.log("Undo: " + commands.get(commands.size()-1));
 			commands.get(commands.size()-1).unexecute();
 			temp.add(commands.get(commands.size()-1));
 			commands.remove(commands.size()-1);
+			
 			
 			frame.repaint();
 	
@@ -925,14 +926,16 @@ public class DrawingController {
 	
 	public void redo() {
 		if(temp.size()!=0) {
-			//RedoCmd redoCmd = new RedoCmd(temp.get(temp.size()-1));
 			
-			//redoCmd.execute();
 			commands.add(temp.get(temp.size()-1));
 			logger.log("Redo: " + temp.get(temp.size()-1));
 			temp.remove(temp.get(temp.size()-1));
 			
 			commands.get(commands.size()-1).execute();
+			
+			//temp.remove(temp.get(temp.size()-1));
+			
+			//commands.get(commands.size()-1).execute();
 			
 			
 			frame.repaint();
@@ -940,7 +943,7 @@ public class DrawingController {
 			else {
 				JOptionPane.showMessageDialog(null, "No active redo commands");
 				return;
-				//frame.getBtnRedo().setEnabled(false);
+				//frame.getBtnRedo().setEnarbled(false);
 			}
 	}
 
@@ -1122,7 +1125,7 @@ public class DrawingController {
 		SaveLoad load = new SaveLoad(logger);
 		load.loadFile();
 		frame.getBtnExecute().setEnabled(true);
-		frame.getBtnUnexecute().setEnabled(true);
+		
 		strLog= logger.getTextArea().getText().split("\n");
 		lineNumber=0;
 	}
@@ -1199,8 +1202,8 @@ public class DrawingController {
 			String []split =s.split(",|\\[|\\]|\\=|\\ ");
 
 			HexagonAdapter ha = new HexagonAdapter(new Hexagon(Integer.parseInt(split[3]), Integer.parseInt(split[4]), Integer.parseInt(split[8])));
-			ha.getHexagon().setAreaColor(new Color(Integer.parseInt(split[16])));
-			ha.getHexagon().setBorderColor(new Color(Integer.parseInt(split[12])));
+			ha.setColorInner(new Color(Integer.parseInt(split[16])));
+			ha.setColor(new Color(Integer.parseInt(split[12])));
 			
 			AddShapeCmd addShape = new AddShapeCmd(model,ha);
 			commandsC.add(addShape);
@@ -1444,8 +1447,9 @@ public class DrawingController {
 		else if(s.contains("Removed_hexagon")) {
 			String []split =s.split(",|\\[|\\]|\\=|\\ ");
 			HexagonAdapter ha2 = new HexagonAdapter(new Hexagon(Integer.parseInt(split[3]), Integer.parseInt(split[4]), Integer.parseInt(split[8])));
-			ha2.getHexagon().setAreaColor(new Color(Integer.parseInt(split[16])));
-			ha2.getHexagon().setBorderColor(new Color(Integer.parseInt(split[12])));
+			ha2.setColorInner(new Color(Integer.parseInt(split[16])));
+			ha2.setColor(new Color(Integer.parseInt(split[12])));
+			System.out.println(ha2);
 			
 			RemoveShapeCmd removeShape = new RemoveShapeCmd(model,ha2);
 			ha2.setSelected(false);
@@ -1511,8 +1515,8 @@ public class DrawingController {
 			String []split =s.split(",|\\[|\\]|\\=|\\ ");
 			HexagonAdapter ha1 = (HexagonAdapter)selectedShapes.get(selectedShapes.size()-1);
 			HexagonAdapter ha2 = new HexagonAdapter(new Hexagon(Integer.parseInt(split[3]), Integer.parseInt(split[4]), Integer.parseInt(split[8])));
-			ha2.getHexagon().setAreaColor(new Color(Integer.parseInt(split[16])));
-			ha2.getHexagon().setBorderColor(new Color(Integer.parseInt(split[12])));
+			ha2.setColorInner(new Color(Integer.parseInt(split[16])));
+			ha2.setColor(new Color(Integer.parseInt(split[12])));
 			UpdateHexagonCmd updateHexagonCmd = new UpdateHexagonCmd(ha1,ha2);
 			commandsC.add(updateHexagonCmd);
 			commands.add(updateHexagonCmd);
@@ -1575,76 +1579,74 @@ public class DrawingController {
 		}
 		/*----------------------------------------------------------------------------------------UNDO, REDO--------------------------------------------------------------*/
 		else if(s.contains("Undo")) {
-			/**if(commandsC.size()!=0) {
+			/*if(commandsC.size()!=0) {
+				
+				UndoCmd undoCmd= new UndoCmd(commandsC.get(commandsC.size()-1));
 				logger.log("Undo: " + commandsC.get(commandsC.size()-1));
-				array[lineNumber]= "Undo" + commands.get(commands.size()-1);
-				commandsC.get(commandsC.size()-1).unexecute();
 				tempT.add(commandsC.get(commandsC.size()-1));
 				commandsC.remove(commandsC.size()-1);
+				undoCmd.execute();
+				//logger.log("Undo: " + commands.get(commands.size()-1));
+				//commands.get(commands.size()-1).unexecute();
+				
+				
 				
 				frame.repaint();
-			
+		
+			}
+			*/
+			undo();
 
+		
+		/*else {
+		JOptionPane.showMessageDialog(null, "No active undo commands");
+			//frame.getBtnUndo().setEnabled(false);
 		}*/
+			
 			/*UndoCmd undoCmd = new UndoCmd(commandsC.get(commandsC.size()-1));
 			undoCmd.execute();
-			logger.log("Undo"+ commandsC.get(commandsC.size()-1));
-			commandsC.remove(commandsC.get(commandsC.size()-1));*/
-			undo();			
+			logger.log("Undo: "+ commandsC.get(commandsC.size()-1));
+			commandsC.remove(commandsC.get(commandsC.size()-1));
+			//undo();			*/
 			
 		}
+	
 		else if(s.contains("Redo")) {
+			
 			/*if(tempT.size()!=0) {
-				
+				RedoCmd redoCmd = new RedoCmd(tempT.get(tempT.size()-1));
+				logger.log("Redo: " + tempT.get(tempT.size()-1));
+				redoCmd.execute();
 				commandsC.add(tempT.get(tempT.size()-1));
-				logger.log("Redo: " + tempT.get(temp.size()-1));
-				
 				tempT.remove(tempT.get(tempT.size()-1));
 				
-				commandsC.get(commandsC.size()-1).execute();
+				
+				//temp.remove(temp.get(temp.size()-1));
+				
+				//commands.get(commands.size()-1).execute();
 				
 				
 				frame.repaint();
-				}*/
-			RedoCmd redoCmd = new RedoCmd(commandsC.get(commandsC.size()-1));
-			redoCmd.execute();
-			//commandsC.add(redoCmd);
-			logger.log("Redo"+ commandsC.get(commandsC.size()-1));
-			
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "No active redo commands");
+					return;
+					//frame.getBtnRedo().setEnabled(false);
+				}
+		*/
 			redo();
-			
 		}
-		
-		
 		frame.repaint();
 		
 		
 		lineNumber++;
+		
 		}
+		
 	}
 	
-	public void unexecuteCommand() {
-		//	logger.getTextArea().setText("");
-			if(commandsC.size()!=0) {
-			//logger.log("Undo: " + commandsC.get(commandsC.size()-1));
-			commandsC.get(commandsC.size()-1).unexecute();
-			//tempT.add(commandsC.get(commandsC.size()-1));
-			commandsC.remove(commandsC.size()-1);
-			lineNumber--;
-			//for(int i=0;i<lineNumber;i++) {
-			//	logger.log(strLog[lineNumber]);
-		//	}
-			
-			
-		//undo();
+	
 
-	
-		}else {
-			JOptionPane.showMessageDialog(null, "No active unexecute commands");
-			return;
-		}
-			frame.repaint();
-	}
 	
 	public boolean isSelect() {
 		return select;

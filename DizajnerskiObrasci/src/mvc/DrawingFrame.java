@@ -364,7 +364,7 @@ public class DrawingFrame extends JFrame implements PropertyChangeListener{
 		gbc_btnExecute.gridy = 2;
 		pnlEast.add(btnExecute, gbc_btnExecute);
 		
-		btnUnexecute = new JButton("Unexecute");
+		/*btnUnexecute = new JButton("Unexecute");
 		btnUnexecute.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				controller.unexecuteCommand();
@@ -376,7 +376,7 @@ public class DrawingFrame extends JFrame implements PropertyChangeListener{
 		gbc_btnUnexecute.gridx = 1;
 		gbc_btnUnexecute.gridy = 3;
 		pnlEast.add(btnUnexecute, gbc_btnUnexecute);
-		
+		*/
 		tglbtnSelect = new JToggleButton("Select");
 		GridBagConstraints gbc_tglbtnSelect = new GridBagConstraints();
 		gbc_tglbtnSelect.insets = new Insets(0, 0, 5, 0);

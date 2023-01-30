@@ -17,9 +17,9 @@ public class DeselectCmd implements CommandShape {
 	}
 		
 	public void execute() {
-		shape.setSelected(false);
-		selectedShapes.remove(shape);
 		
+		selectedShapes.remove(shape);
+		shape.setSelected(false);
 		
 	}
 

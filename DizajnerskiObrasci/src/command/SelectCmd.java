@@ -34,6 +34,7 @@ public class SelectCmd implements CommandShape{
 
 	@Override
 	public void unexecute() {
+		
 		selectedShapes.remove(shape);
 		shape.setSelected(false);
 		
