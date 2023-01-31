@@ -454,13 +454,15 @@ public class DrawingController {
 				else if(shapes.get(i) instanceof HexagonAdapter) {
 					logger.log("Deselected_hexagon: " + model.getShapes().get(i).toString() + "," + model.getShapes().indexOf(shapes.get(i)));
 				}
+					
+				DeselectCmd deselectCmd = new DeselectCmd(selectedShapes, shapes.get(i));
+				commands.add(deselectCmd);
+				deselectCmd.execute();
 				}
 				
 				
 			//shapes.get(i).setSelected(false);
-				DeselectCmd deselectCmd = new DeselectCmd(selectedShapes, shapes.get(i));
-				commands.add(deselectCmd);
-				deselectCmd.execute();
+				
 			
 			
 		}
@@ -480,12 +482,12 @@ public class DrawingController {
 	
 	public void delete() {
 		
-		if(counter()==0) {
+		/*if(counter()==0) {
 			JOptionPane.showMessageDialog(null, "List of shapes is empty!");
 			//setSelect(true);
 		}
 		
-		else {
+		else {*/
 		//setSelect(false);
 		if(selectedShapes.size()==1) {
 		for(int i=0;i<model.getShapes().size();i++) {
@@ -522,9 +524,25 @@ public class DrawingController {
 					//setSelect(true);
 					}
 					else {
-						model.getShapes().get(i).setSelected(false);
+						if(model.getShapes().get(i) instanceof Point) {
+							logger.log("Deselected_point: " + model.getShapes().get(i).toString() + "," + model.getShapes().indexOf(model.getShapes().get(i)));
+						} else if(model.getShapes().get(i) instanceof Line) {
+							logger.log("Deselected_line: " + model.getShapes().get(i).toString() + "," + model.getShapes().indexOf(model.getShapes().get(i)));
+						} else if(model.getShapes().get(i) instanceof Donut) {
+							logger.log("Deselected_donut: " + model.getShapes().get(i).toString() + "," + model.getShapes().indexOf(model.getShapes().get(i)));
+						} else if(model.getShapes().get(i) instanceof Circle) {
+							logger.log("Deselected_circle: " + model.getShapes().get(i).toString() + "," + model.getShapes().indexOf(model.getShapes().get(i)));
+						} else if(model.getShapes().get(i) instanceof Rectangle) {
+							logger.log("Deselected_rectangle: " + model.getShapes().get(i).toString() + "," + model.getShapes().indexOf(model.getShapes().get(i)));
+						} else if(model.getShapes().get(i) instanceof HexagonAdapter) {
+							logger.log("Deselected_hexagon: " + model.getShapes().get(i).toString() + "," + model.getShapes().indexOf(model.getShapes().get(i)));
+						}
+						DeselectCmd deselectCmd = new DeselectCmd(selectedShapes, model.getShapes().get(i));
+						commands.add(deselectCmd);
+						deselectCmd.execute();
+						
 						//numOfSelectedShapes=0;
-						selectedShapes.clear();
+						//selectedShapes.clear();
 						frame.repaint();
 						//setSelect(true);
 					}
@@ -532,10 +550,10 @@ public class DrawingController {
 				
 		}
 		}
-		else if(selectedShapes.size() ==0) {
+		/*else if(selectedShapes.size() ==0) {
 			JOptionPane.showMessageDialog(null, "Please, select the shape!");
 			//setSelect(true);
-		}
+		}*/
 		else {
 			ArrayList<Shape> temporary = new ArrayList();
 			int option =JOptionPane.showConfirmDialog(null, "Are you sure you want to delete all of selected shapes?", "Warning message", JOptionPane.YES_NO_OPTION);
@@ -553,18 +571,19 @@ public class DrawingController {
 						//removeShapeCmd.execute();
 						commands.add(removeShapeCmd);
 						if(model.getShapes().get(i) instanceof Point) {
-							logger.log("Removed_point: " + model.getShapes().get(i).toString());
+							logger.log("Removed_point: " + model.getShapes().get(i).toString() + "," + model.getShapes().indexOf(model.getShapes().get(i)));
 						} else if(model.getShapes().get(i) instanceof Line) {
-							logger.log("Removed_line: " + model.getShapes().get(i).toString());
+							logger.log("Removed_line: " + model.getShapes().get(i).toString() + "," + model.getShapes().indexOf(model.getShapes().get(i)));
 						} else if(model.getShapes().get(i) instanceof Donut) {
-							logger.log("Removed_donut: " + model.getShapes().get(i).toString());
+							logger.log("Removed_donut: " + model.getShapes().get(i).toString() + "," + model.getShapes().indexOf(model.getShapes().get(i)));
 						} else if(model.getShapes().get(i) instanceof Circle) {
-							logger.log("Removed_circle: " + model.getShapes().get(i).toString());
+							logger.log("Removed_circle: " + model.getShapes().get(i).toString() + "," + model.getShapes().indexOf(model.getShapes().get(i)));
 						} else if(model.getShapes().get(i) instanceof Rectangle) {
-							logger.log("Removed_rectangle: " + model.getShapes().get(i).toString());
+							logger.log("Removed_rectangle: " + model.getShapes().get(i).toString() + "," + model.getShapes().indexOf(model.getShapes().get(i)));
 						} else if(model.getShapes().get(i) instanceof HexagonAdapter) {
-							logger.log("Removed_hexagon: " + model.getShapes().get(i).toString());
+							logger.log("Removed_hexagon: " + model.getShapes().get(i).toString() + "," + model.getShapes().indexOf(model.getShapes().get(i)));
 						}
+						selectedShapes.remove(model.getShapes().get(i));
 					}
 				}
 				temp.clear();
@@ -575,35 +594,51 @@ public class DrawingController {
 					
 				}
 				//numOfSelectedShapes=0;
-				selectedShapes.clear();
+				//selectedShapes.clear();
 				frame.repaint();
 				//setSelect(true);
 			}
 			else {
 				for(int i=0;i<model.getShapes().size();i++) {
-					model.getShapes().get(i).setSelected(false);
+					if(model.getShapes().get(i).isSelected()) {
+						if(model.getShapes().get(i) instanceof Point) {
+							logger.log("Deselected_point: " + model.getShapes().get(i).toString());
+						} else if(model.getShapes().get(i) instanceof Line) {
+							logger.log("Deselected_line: " + model.getShapes().get(i).toString());
+						} else if(model.getShapes().get(i) instanceof Donut) {
+							logger.log("Deselected_donut: " + model.getShapes().get(i).toString());
+						} else if(model.getShapes().get(i) instanceof Circle) {
+							logger.log("Deselected_circle: " + model.getShapes().get(i).toString());
+						} else if(model.getShapes().get(i) instanceof Rectangle) {
+							logger.log("Deselected_rectangle: " + model.getShapes().get(i).toString());
+						} else if(model.getShapes().get(i) instanceof HexagonAdapter) {
+							logger.log("Deselected_hexagon: " + model.getShapes().get(i).toString());
+						}
+						DeselectCmd deselectCmd = new DeselectCmd(selectedShapes, model.getShapes().get(i));
+						commands.add(deselectCmd);
+						deselectCmd.execute();
+					/*model.getShapes().get(i).setSelected(false);
+					selectedShapes.remove(model.getShapes().get(i));*/
+					}
 				}
 				//numOfSelectedShapes=0;
-				selectedShapes.clear();
+				//selectedShapes.clear();
 				frame.repaint();
 				//setSelect(true);
 			}
 		}
 		}
 		//frame.repaint();
-		/*if(isSelect()==false) {
-			JOptionPane.showMessageDialog(null, "Please, select the shape!");
-			setSelect(true);
-		}*/
-		}
+		
+		
 	
 	public void modify() {
-		if(counter()==0) {
+		/*if(counter()==0) {
 			JOptionPane.showMessageDialog(null, "List of shapes is empty!");
 			setSelectModify(true);
 		}
-		else
-			setSelectModify(false);
+		else*/
+			//setSelectModify(false);
 		for(int i=0;i<model.getShapes().size();i++) {
 			
 					if(model.getShapes().get(i) instanceof Point) {
@@ -616,7 +651,7 @@ public class DrawingController {
 						dlgPo.getBtnColorPoint().setBackground(frame.getBtnBorder().getBackground());
 						dlgPo.getBtnColorPoint().setEnabled(false);
 						dlgPo.setVisible(true);
-						setSelectModify(true);
+					//	setSelectModify(true);
 						//shapes.remove(i);
 						//repaint();
 						
@@ -625,9 +660,10 @@ public class DrawingController {
 							int cooX=(Integer.parseInt(dlgPo.getTxtX().getText()));
 							int cooY=(Integer.parseInt(dlgPo.getTxtY().getText()));
 							Point p=new Point(cooX,cooY, frame.getBtnBorder().getBackground());
+							p.setSelected(true);
 							updatePointCmd = new UpdatePointCmd(p2,p);
 							commands.add(updatePointCmd);
-							selectedShapes.remove(p2);
+						//	selectedShapes.remove(p2);
 							
 							updatePointCmd.execute();
 							logger.log("Modify_point: " + p.toString());
@@ -636,8 +672,8 @@ public class DrawingController {
 							
 							//model.getShapes().add(p);
 							
-							p.setSelected(true);
-							selectedShapes.add(p);
+							
+							//selectedShapes.add(p);
 							frame.repaint();
 						}
 						
@@ -660,7 +696,7 @@ public class DrawingController {
 						dlgLi.getBtnColorLine().setBackground(frame.getBtnBorder().getBackground());
 						dlgLi.getBtnColorLine().setEnabled(false);
 						dlgLi.setVisible(true);
-						setSelectModify(true);
+						//setSelectModify(true);
 						//shapes.remove(i);
 					//	repaint();
 						
@@ -671,21 +707,18 @@ public class DrawingController {
 							int eX=(Integer.parseInt(dlgLi.getTxtEPX().getText()));
 							int eY=(Integer.parseInt(dlgLi.getTxtEPY().getText()));
 							Line l2=new Line(new Point(sX,sY), new Point(eX, eY), frame.getBtnBorder().getBackground());
+							l2.setSelected(true);
 							updateLineCmd = new UpdateLineCmd((Line)model.getShapes().get(i),l2);
 							commands.add(updateLineCmd);
-							selectedShapes.remove(l);
+							//selectedShapes.remove(l);
 							
-							//model.getShapes().remove(i);
-							
-						//	model.getShapes().add(l2);
-						
 							
 							updateLineCmd.execute();
 							logger.log("Modify_line: " + l2.toString());
 							temp.clear();
 							
-							l2.setSelected(true);
-							selectedShapes.add(l2);
+							
+							//selectedShapes.add(l2);
 							frame.repaint();
 						}
 						
@@ -710,7 +743,7 @@ public class DrawingController {
 						dlgRec.getBtnBorderColor().setEnabled(false);
 						dlgRec.getBtnInnerColor().setEnabled(false);
 						dlgRec.setVisible(true);
-						setSelectModify(true);
+					//	setSelectModify(true);
 						//shapes.remove(i);
 						//repaint();
 						
@@ -724,8 +757,9 @@ public class DrawingController {
 							Color clr2=frame.getBtnInner().getBackground();
 							
 							Rectangle r2=new Rectangle(new Point(uX, uY), wid, he, clr1, clr2);
+							r2.setSelected(true);
 							updateRectCmd=new UpdateRectangleCmd(r1,r2);
-							selectedShapes.remove(r1);
+							//selectedShapes.remove(r1);
 							commands.add(updateRectCmd);
 							updateRectCmd.execute();
 							logger.log("Modify_rectangle: " + r2.toString());
@@ -734,8 +768,8 @@ public class DrawingController {
 							
 							//model.getShapes().add(r2);
 						
-							r2.setSelected(true);
-							selectedShapes.add(r2);
+							
+							//selectedShapes.add(r2);
 							frame.repaint();
 						}
 						else {
@@ -759,7 +793,7 @@ public class DrawingController {
 						dlgCircle.getBtnCircleBorder().setEnabled(false);
 						dlgCircle.getBtnCircleColorInner().setEnabled(false);
 						dlgCircle.setVisible(true);
-						setSelectModify(true);
+						//setSelectModify(true);
 						//shapes.remove(i);
 						//repaint();
 						
@@ -771,17 +805,18 @@ public class DrawingController {
 							Color col1=frame.getBtnBorder().getBackground();
 							Color col2=frame.getBtnInner().getBackground();
 							Circle c2=new Circle(new Point(xx, yy),ra, col1, col2);
+							c2.setSelected(true);
 							updateCircleCmd = new UpdateCircleCmd(c1,c2);
 							commands.add(updateCircleCmd);
-							selectedShapes.remove(c1);
+							//selectedShapes.remove(c1);
 							updateCircleCmd.execute();
 							logger.log("Modify_circle: " + c2.toString());
 							temp.clear();
 							//model.getShapes().remove(i);
 							
 							//model.getShapes().add(c2);
-							c2.setSelected(true);
-							selectedShapes.add(c2);
+							//c2.setSelected(true);
+							//selectedShapes.add(c2);
 							frame.repaint();
 						}
 						else {
@@ -807,7 +842,7 @@ public class DrawingController {
 						dlgDonut.getBtnDonutBorder().setEnabled(false);
 						dlgDonut.getBtnDonutInner().setEnabled(false);
 						dlgDonut.setVisible(true);
-						setSelectModify(true);
+						//setSelectModify(true);
 						//shapes.remove(i);
 						//repaint();
 						
@@ -817,9 +852,10 @@ public class DrawingController {
 							int radi=(Integer.parseInt(dlgDonut.getTxtRadius().getText()));
 							int in=(Integer.parseInt(dlgDonut.getTxtInner().getText()));
 							Donut d2=new Donut(new Point(dX, dY),radi, in, frame.getBtnBorder().getBackground(),frame.getBtnInner().getBackground());
+							d2.setSelected(true);
 							updateDonutCmd = new UpdateDonutCmd(d1,d2);
 							commands.add(updateDonutCmd);
-							selectedShapes.remove(d1);
+							//selectedShapes.remove(d1);
 							updateDonutCmd.execute();
 							logger.log("Modify_donut: " + d2.toString());
 							temp.clear();
@@ -827,8 +863,8 @@ public class DrawingController {
 						
 							
 							//model.getShapes().add(d2);
-							d2.setSelected(true);
-							selectedShapes.add(d2);
+							
+							//selectedShapes.add(d2);
 							frame.repaint();
 						
 					}
@@ -854,7 +890,7 @@ public class DrawingController {
 							dlgHexagon.getBtnBorder().setEnabled(false);
 							dlgHexagon.getBtnInner().setEnabled(false);
 							dlgHexagon.setVisible(true);
-							setSelectModify(true);
+							//setSelectModify(true);
 							
 							if(dlgHexagon.isGood()) {
 								int dX = (Integer.parseInt(dlgHexagon.getTxtX().getText()));
@@ -867,17 +903,18 @@ public class DrawingController {
 								HexagonAdapter ha = new HexagonAdapter(new Hexagon(dX,dY,r));
 								ha.setColor(frame.getBtnBorder().getBackground());
 								ha.setColorInner(frame.getBtnInner().getBackground());
+								ha.setSelected(true);
 								//model.getShapes().remove(i);
 								
 								//model.getShapes().add(ha);
 								updateHexagonCmd=new UpdateHexagonCmd(h1,ha);
-								selectedShapes.remove(h1);
+								//selectedShapes.remove(h1);
 								commands.add(updateHexagonCmd);
 								updateHexagonCmd.execute();
 								logger.log("Modify_hexagon: " + ha.toString());
 								temp.clear();
-								ha.setSelected(true);
-								selectedShapes.add(ha);
+								
+								//selectedShapes.add(ha);
 								frame.repaint();
 							}
 							else {
@@ -892,10 +929,10 @@ public class DrawingController {
 			
 		
 			}
-	if(isSelectModify()==false) {
+	/*if(isSelectModify()==false) {
 		JOptionPane.showMessageDialog(null, "Please, select the shape!");
 		setSelectModify(true);
-	}
+	}*/
 }
 	
 	public void undo() {
@@ -914,13 +951,26 @@ public class DrawingController {
 			frame.repaint();
 	
 		}
-		
-
 	//}
 	else {
 	JOptionPane.showMessageDialog(null, "No active undo commands");
 		//frame.getBtnUndo().setEnabled(false);
 	}
+		
+			if(selectedShapes.size()==0) {
+			propertyChangeSupport.firePropertyChange("Delete disabled", selectedShapes == null, selectedShapes != null);
+			propertyChangeSupport.firePropertyChange("Modify disabled", selectedShapes == null, selectedShapes != null);
+		}
+		else if(selectedShapes.size()==1) {
+			propertyChangeSupport.firePropertyChange("Modify enable", false, selectedShapes != null && selectedShapes.size() == 1);
+			propertyChangeSupport.firePropertyChange("Delete enable", false, selectedShapes != null && selectedShapes.size() == 1);
+		}
+		else if(selectedShapes.size()>1){
+			propertyChangeSupport.firePropertyChange("Delete enable", false, selectedShapes != null && selectedShapes.size() == 1);
+			propertyChangeSupport.firePropertyChange("Modify disabled", selectedShapes == null, selectedShapes != null);
+			
+		}
+		
 		
 	}
 	
@@ -945,6 +995,20 @@ public class DrawingController {
 				return;
 				//frame.getBtnRedo().setEnarbled(false);
 			}
+		if(selectedShapes.size()==0) {
+			propertyChangeSupport.firePropertyChange("Delete disabled", selectedShapes == null, selectedShapes != null);
+			propertyChangeSupport.firePropertyChange("Modify disabled", selectedShapes == null, selectedShapes != null);
+		}
+		else if(selectedShapes.size()==1) {
+			propertyChangeSupport.firePropertyChange("Modify enable", false, selectedShapes != null && selectedShapes.size() == 1);
+			propertyChangeSupport.firePropertyChange("Delete enable", false, selectedShapes != null && selectedShapes.size() == 1);
+		}
+		else if(selectedShapes.size()>1){
+			propertyChangeSupport.firePropertyChange("Delete enable", false, selectedShapes != null && selectedShapes.size() == 1);
+			propertyChangeSupport.firePropertyChange("Modify disabled", selectedShapes == null, selectedShapes != null);
+			
+		}
+		
 	}
 
 	public void toFront() {
@@ -961,7 +1025,9 @@ public class DrawingController {
 			return;
 		}
 		else if(selectedShapes.size()==1) {
-			toFrontCmd = new ToFrontCmd(model,selectedShapes.get(selectedShapes.size()-1));
+			Shape sh = selectedShapes.get(selectedShapes.size()-1);
+			//selectedShapes.remove(sh);
+			toFrontCmd = new ToFrontCmd(model, sh);
 			commands.add(toFrontCmd);
 			logger.log("To_front: " + selectedShapes.get(selectedShapes.size()-1));
 			toFrontCmd.execute();
@@ -1074,17 +1140,7 @@ public class DrawingController {
 	}
 	
 	public void bringToBack() {
-		/*
-		for(int i=0;i<model.getShapes().size();i++) {
-			if(model.getShapes().get(i).isSelected()) {
-				Shape s = model.getShapes().get(i);
-				model.remove(s);
-				model.getShapes().add(0, s);
-				break;
-			}
-			
-		}
-		*/
+		
 		if(model.getShapes().size()==0) {
 			JOptionPane.showMessageDialog(null, "List of shapes is empty!");
 			return;
@@ -1147,7 +1203,7 @@ public class DrawingController {
 			commandsC.add(addShape);
 			commands.add(addShape);
 			addShape.execute();
-			
+			temp.clear();
 			logger.log("Added_point: " + p.toString());
 			//array[lineNumber]="Added_point: " + p.toString();
 		}
@@ -1159,6 +1215,7 @@ public class DrawingController {
 			commandsC.add(addShape);
 			commands.add(addShape);
 			addShape.execute();
+			temp.clear();
 			logger.log("Added_line: " + l.toString());
 			//array[lineNumber]="Added_line: " + l.toString();
 			
@@ -1172,6 +1229,7 @@ public class DrawingController {
 			commandsC.add(addShape);
 			commands.add(addShape);
 			addShape.execute();
+			temp.clear();
 			logger.log("Added_rectangle: " + r.toString());
 			//array[lineNumber]="Added_rectangle: " + r.toString();
 		}
@@ -1183,6 +1241,7 @@ public class DrawingController {
 			commandsC.add(addShape);
 			commands.add(addShape);
 			addShape.execute();
+			temp.clear();
 			logger.log("Added_donut: " + d.toString());
 			//array[lineNumber]="Added_donut: " + d.toString();
 		}
@@ -1195,6 +1254,7 @@ public class DrawingController {
 			commandsC.add(addShape);
 			commands.add(addShape);
 			addShape.execute();
+			temp.clear();
 			logger.log("Added_circle: " + c.toString());
 			//array[lineNumber]="Added_circle: " + c.toString();
 		}
@@ -1209,6 +1269,7 @@ public class DrawingController {
 			commandsC.add(addShape);
 			commands.add(addShape);
 			addShape.execute();
+			temp.clear();
 			logger.log("Added_hexagon: " + ha.toString());
 			//array[lineNumber]="Added_hexagon: " + ha.toString();
 		}
@@ -1277,7 +1338,7 @@ public class DrawingController {
 			commands.add(selectCmd);
 			selectCmd.execute();
 			//model.getShapes().get(index).setSelected(true);
-			//selectedShapes.add(model.getShapes().get(index));
+			////selectedShapes.add(model.getShapes().get(index));
 			logger.log("Selected_circle: " + model.getShapes().get(index).toString());
 			//array[lineNumber]="Selected_circle: " + model.getShapes().get(index).toString();
 		}
@@ -1378,163 +1439,270 @@ public class DrawingController {
 		
 		/*--------------------------------------------------------------------------REMOVED-----------------------------------------------*/
 		else if(s.contains("Removed_point")) {
-			String []split =s.split(",|\\[|\\]|\\=|\\ ");
+			//String []split =s.split(",|\\[|\\]|\\=|\\ ");
 			
-			Point p = new Point(Integer.parseInt(split[2]),Integer.parseInt(split[3]), new Color(Integer.parseInt(split[8])));
-			RemoveShapeCmd removeShape = new RemoveShapeCmd(model,p);
-			p.setSelected(false);
-			selectedShapes.remove(p);
-			commandsC.add(removeShape);
-			commands.add(removeShape);
-			removeShape.execute();
-			logger.log("Removed_point: " + p.toString());
+			//Point p = new Point(Integer.parseInt(split[2]),Integer.parseInt(split[3]), new Color(Integer.parseInt(split[8])));
+			for(int i=0;i<model.getShapes().size();i++) {
+				
+				if(model.getShapes().get(i).isSelected()) {
+					RemoveShapeCmd removeShape = new RemoveShapeCmd(model,model.getShapes().get(i));
+					logger.log("Removed_point: " + model.getShapes().get(i).toString());
+					selectedShapes.remove(model.getShapes().get(i));
+					removeShape.execute();
+					commands.add(removeShape);
+				}
+				}
+			
+	
+			temp.clear();
+			
 		//	array[lineNumber]="Removed_point: " + p.toString();
 		}
 		else if(s.contains("Removed_line")) {
-			String []split =s.split(",|\\[|\\]|\\=|\\ ");
+			//String []split =s.split(",|\\[|\\]|\\=|\\ ");
 			
-			Line l = new Line(new Point(Integer.parseInt(split[2]),Integer.parseInt(split[3])), new Point(Integer.parseInt(split[7]),
-					Integer.parseInt(split[8])), new Color(Integer.parseInt(split[13])));
-			RemoveShapeCmd removeShape = new RemoveShapeCmd(model,l);
-			l.setSelected(false);
-			selectedShapes.remove(l);
-			commandsC.add(removeShape);
-			commands.add(removeShape);
-			removeShape.execute();
-			logger.log("Removed_line: " + l.toString());
-			//array[lineNumber]="Removed_line: " + l.toString();
+			//Line l = new Line(new Point(Integer.parseInt(split[2]),Integer.parseInt(split[3])), new Point(Integer.parseInt(split[7]),
+			//		Integer.parseInt(split[8])), new Color(Integer.parseInt(split[13])));
+			for(int i=0;i<model.getShapes().size();i++) {
+				
+				if(model.getShapes().get(i).isSelected()) {
+					RemoveShapeCmd removeShape = new RemoveShapeCmd(model,model.getShapes().get(i));
+					logger.log("Removed_line: " + model.getShapes().get(i).toString());
+					selectedShapes.remove(model.getShapes().get(i));
+					removeShape.execute();
+					commands.add(removeShape);
+				}
+				}
+			temp.clear();
+		
 		}
 		else if(s.contains("Removed_donut")) {
-			String []split =s.split(",|\\[|\\]|\\=|\\ ");
-			Donut d = new Donut(new Point(Integer.parseInt(split[4]), Integer.parseInt(split[5])), Integer.parseInt(split[9]), Integer.parseInt(split[20]),
-					new Color(Integer.parseInt(split[13])), new Color(Integer.parseInt(split[17])));
-			RemoveShapeCmd removeShape = new RemoveShapeCmd(model,d);
-			d.setSelected(false);
-			selectedShapes.remove(d);
-			commandsC.add(removeShape);
-			commands.add(removeShape);
-			removeShape.execute();
-			logger.log("Removed_donut: " + d.toString());
-			//array[lineNumber]="Removed_donut: " + d.toString();
+			for(int i=0;i<model.getShapes().size();i++) {
+				
+				if(model.getShapes().get(i).isSelected()) {
+					RemoveShapeCmd removeShape = new RemoveShapeCmd(model,model.getShapes().get(i));
+					logger.log("Removed_donut: " + model.getShapes().get(i).toString());
+					selectedShapes.remove(model.getShapes().get(i));
+					removeShape.execute();
+					commands.add(removeShape);
+				}
+				}
+			temp.clear();
+			
+		
 		}
 		else if(s.contains("Removed_circle")) {
-			String []split =s.split(",|\\[|\\]|\\=|\\ ");
-			Circle c = new Circle(new Point(Integer.parseInt(split[4]),Integer.parseInt(split[5])), Integer.parseInt(split[9])
-					,new Color(Integer.parseInt(split[13])), new Color(Integer.parseInt(split[17])));
-			RemoveShapeCmd removeShape = new RemoveShapeCmd(model,c);
-			c.setSelected(false);
-			selectedShapes.remove(c);
-			commandsC.add(removeShape);
-			commands.add(removeShape);
-			removeShape.execute();
-			logger.log("Removed_circle: " + c.toString());
-			//array[lineNumber]="Removed_circle: " + c.toString();
+			for(int i=0;i<model.getShapes().size();i++) {
+				
+				if(model.getShapes().get(i).isSelected()) {
+					RemoveShapeCmd removeShape = new RemoveShapeCmd(model,model.getShapes().get(i));
+					logger.log("Removed_circle: " + model.getShapes().get(i).toString());
+					selectedShapes.remove(model.getShapes().get(i));
+					removeShape.execute();
+					commands.add(removeShape);
+				}
+				}
+			temp.clear();
+			
+		
 		}
 		else if(s.contains("Removed_rectangle")) {
-			String []split =s.split(",|\\[|\\]|\\=|\\ ");
+			
+			for(int i=0;i<model.getShapes().size();i++) {
+				
+				if(model.getShapes().get(i).isSelected()) {
+					RemoveShapeCmd removeShape = new RemoveShapeCmd(model,model.getShapes().get(i));
+					logger.log("Removed_rectangle: " + model.getShapes().get(i).toString());
+					selectedShapes.remove(model.getShapes().get(i));
+					removeShape.execute();
+					commands.add(removeShape);
+				}
+				}
+			temp.clear();
+			
 
-			Rectangle r = new Rectangle(new Point(Integer.parseInt(split[5]), Integer.parseInt(split[6])), Integer.parseInt(split[10]), 
-					Integer.parseInt(split[13]), new Color(Integer.parseInt(split[17])), new Color(Integer.parseInt(split[21])));
-			RemoveShapeCmd removeShape = new RemoveShapeCmd(model,r);
-			r.setSelected(false);
-			selectedShapes.remove(r);
-			commandsC.add(removeShape);
-			commands.add(removeShape);
-			removeShape.execute();
-			logger.log("Removed_rectangle: " + r.toString());
-			//array[lineNumber]="Removed_rectangle: " + r.toString();
 		}
 		else if(s.contains("Removed_hexagon")) {
-			String []split =s.split(",|\\[|\\]|\\=|\\ ");
-			HexagonAdapter ha2 = new HexagonAdapter(new Hexagon(Integer.parseInt(split[3]), Integer.parseInt(split[4]), Integer.parseInt(split[8])));
-			ha2.setColorInner(new Color(Integer.parseInt(split[16])));
-			ha2.setColor(new Color(Integer.parseInt(split[12])));
-			System.out.println(ha2);
 			
-			RemoveShapeCmd removeShape = new RemoveShapeCmd(model,ha2);
-			ha2.setSelected(false);
-			selectedShapes.remove(ha2);
-			commandsC.add(removeShape);
-			commands.add(removeShape);
-			removeShape.execute();
-			logger.log("Removed_hexagon: " + ha2.toString());
-			//array[lineNumber]="Removed_hexagon: " + ha2.toString();
-			
+				for(int i=0;i<model.getShapes().size();i++) {
+				
+				if(model.getShapes().get(i).isSelected()) {
+					RemoveShapeCmd removeShape = new RemoveShapeCmd(model,model.getShapes().get(i));
+					logger.log("Removed_hexagon: " + model.getShapes().get(i).toString());
+					selectedShapes.remove(model.getShapes().get(i));
+					removeShape.execute();
+					commands.add(removeShape);
+				}
+				}
+			temp.clear();
+		
 		}
 		
 		/*-----------------------------------------------------------------------MODIFY--------------------------------------------------------*/
 		else if(s.contains("Modify_point")) {
 			String []split =s.split(",|\\[|\\]|\\=|\\ ");
-			Point p1 = (Point)selectedShapes.get(selectedShapes.size()-1);
-			Point p2 = new Point(Integer.parseInt(split[2]),Integer.parseInt(split[3]), new Color(Integer.parseInt(split[8])));
-			UpdatePointCmd updatePointCmd = new UpdatePointCmd(p1,p2);
-			commandsC.add(updatePointCmd);
-			commands.add(updatePointCmd);
-			updatePointCmd.execute();
-			logger.log("Modify_point: " + p2.toString());
-			//array[lineNumber]="Modify_point: " + p2.toString();
+			for(int i=0;i<model.getShapes().size();i++) {
+				
+				if(model.getShapes().get(i) instanceof Point) {
+					
+					if(model.getShapes().get(i).isSelected()) {
+						Point p1 = (Point)model.getShapes().get(i);
+						Point p2 = new Point(Integer.parseInt(split[2]),Integer.parseInt(split[3]), new Color(Integer.parseInt(split[8])));
+						p2.setSelected(true);
+						updatePointCmd = new UpdatePointCmd(p1,p2);
+						commands.add(updatePointCmd);
+						//selectedShapes.remove(p1);
+						
+						updatePointCmd.execute();
+						logger.log("Modify_point: " + p2.toString());
+						temp.clear();
+						
+						
+						//p2.setSelected(true);
+						//selectedShapes.add(p2);
+					}
+				}
+			}
+	
 		}
 		else if(s.contains("Modify_line")) {
 			String []split =s.split(",|\\[|\\]|\\=|\\ ");
-			Line l1 = (Line)selectedShapes.get(selectedShapes.size()-1);
-			Line l2 = new Line(new Point(Integer.parseInt(split[2]),Integer.parseInt(split[3])), new Point(Integer.parseInt(split[7]),
+			
+			
+			for(int i=0;i<model.getShapes().size();i++) {
+				
+				if(model.getShapes().get(i) instanceof Line) {
+					
+					if(model.getShapes().get(i).isSelected()) {
+						Line l1 = (Line)model.getShapes().get(i);
+						Line l2 = new Line(new Point(Integer.parseInt(split[2]),Integer.parseInt(split[3])), new Point(Integer.parseInt(split[7]),
 					Integer.parseInt(split[8])), new Color(Integer.parseInt(split[13])));
-			UpdateLineCmd updateLineCmd = new UpdateLineCmd(l1,l2);
-			commandsC.add(updateLineCmd);
-			commands.add(updateLineCmd);
-			updateLineCmd.execute();
-			logger.log("Modify_line: " + l2.toString());
-			//array[lineNumber]="Modify_line: " + l2.toString();
+						l2.setSelected(true);
+						updateLineCmd = new UpdateLineCmd(l1,l2);
+						commands.add(updateLineCmd);
+						//selectedShapes.remove(l1);
+						
+						updateLineCmd.execute();
+						logger.log("Modify_line: " + l2.toString());
+						temp.clear();
+						
+						//l2.setSelected(true);
+						//selectedShapes.add(l2);
+					}
+				}
+			}
+			
 			
 		}
 		else if(s.contains("Modify_donut")) {
 			String []split =s.split(",|\\[|\\]|\\=|\\ ");
-			Donut d1 = (Donut)selectedShapes.get(selectedShapes.size()-1);
-			Donut d2 = new Donut(new Point(Integer.parseInt(split[4]), Integer.parseInt(split[5])), Integer.parseInt(split[9]), Integer.parseInt(split[20]),
-					new Color(Integer.parseInt(split[13])), new Color(Integer.parseInt(split[17])));
-			UpdateDonutCmd updateDonutCmd = new UpdateDonutCmd(d1,d2);
-			commandsC.add(updateDonutCmd);
-			commands.add(updateDonutCmd);
-			updateDonutCmd.execute();
-			logger.log("Modify_donut: " + d2.toString());
-			//array[lineNumber]="Modify_donut: " + d2.toString();
+			for(int i=0;i<model.getShapes().size();i++) {
+				
+				if(model.getShapes().get(i) instanceof Donut) {
+					
+					if(model.getShapes().get(i).isSelected()) {
+						Donut d1 = (Donut)model.getShapes().get(i);
+						Donut d2 = new Donut(new Point(Integer.parseInt(split[4]), Integer.parseInt(split[5])), Integer.parseInt(split[9]), Integer.parseInt(split[20]),
+								new Color(Integer.parseInt(split[13])), new Color(Integer.parseInt(split[17])));
+						d2.setSelected(true);
+						updateDonutCmd = new UpdateDonutCmd(d1,d2);
+						commands.add(updateDonutCmd);
+						//selectedShapes.remove(d1);
+						
+						updateDonutCmd.execute();
+						logger.log("Modify_donut: " + d2.toString());
+						temp.clear();
+						
+						//d2.setSelected(true);
+						//selectedShapes.add(d2);
+					}
+				}
+			}
+			
 		}
 		else if(s.contains("Modify_circle")) {
 			String []split =s.split(",|\\[|\\]|\\=|\\ ");
-			Circle c1 = (Circle)selectedShapes.get(selectedShapes.size()-1);
-			Circle c2= new Circle(new Point(Integer.parseInt(split[4]),Integer.parseInt(split[5])), Integer.parseInt(split[9])
-					,new Color(Integer.parseInt(split[13])), new Color(Integer.parseInt(split[17])));
-			UpdateCircleCmd updateCircleCmd = new UpdateCircleCmd(c1,c2);
-			commandsC.add(updateCircleCmd);
-			commands.add(updateCircleCmd);
-			updateCircleCmd.execute();
-			logger.log("Modify_circle: " + c2.toString());
-			//array[lineNumber]="Modify_circle: " + c2.toString();
+			
+			for(int i=0;i<model.getShapes().size();i++) {
+				
+				if(model.getShapes().get(i) instanceof Circle) {
+					
+					if(model.getShapes().get(i).isSelected()) {
+						Circle c1 = (Circle)model.getShapes().get(i);
+						Circle c2 = new Circle(new Point(Integer.parseInt(split[4]),Integer.parseInt(split[5])), Integer.parseInt(split[9])
+								,new Color(Integer.parseInt(split[13])), new Color(Integer.parseInt(split[17])));
+						c2.setSelected(true);
+						updateCircleCmd = new UpdateCircleCmd(c1,c2);
+						commands.add(updateCircleCmd);
+					//	selectedShapes.remove(c1);
+						
+						updateCircleCmd.execute();
+						logger.log("Modify_circle: " + c2.toString());
+						temp.clear();
+						
+						//c2.setSelected(true);
+						//selectedShapes.add(c2);
+					}
+				}
+			}
+			
+			
 		}
 		else if(s.contains("Modify_hexagon")) {
 			String []split =s.split(",|\\[|\\]|\\=|\\ ");
-			HexagonAdapter ha1 = (HexagonAdapter)selectedShapes.get(selectedShapes.size()-1);
-			HexagonAdapter ha2 = new HexagonAdapter(new Hexagon(Integer.parseInt(split[3]), Integer.parseInt(split[4]), Integer.parseInt(split[8])));
-			ha2.setColorInner(new Color(Integer.parseInt(split[16])));
-			ha2.setColor(new Color(Integer.parseInt(split[12])));
-			UpdateHexagonCmd updateHexagonCmd = new UpdateHexagonCmd(ha1,ha2);
-			commandsC.add(updateHexagonCmd);
-			commands.add(updateHexagonCmd);
-			updateHexagonCmd.execute();
-			logger.log("Modify_hexagon: " + ha2.toString());
-			//array[lineNumber]="Modify_hexagon: " + ha2.toString();
+
+			for(int i=0;i<model.getShapes().size();i++) {
+				
+				if(model.getShapes().get(i) instanceof HexagonAdapter) {
+					
+					if(model.getShapes().get(i).isSelected()) {
+						HexagonAdapter ha1 = (HexagonAdapter)model.getShapes().get(i);
+						HexagonAdapter ha2 = new HexagonAdapter(new Hexagon(Integer.parseInt(split[3]), Integer.parseInt(split[4]), Integer.parseInt(split[8])));
+						ha2.setColorInner(new Color(Integer.parseInt(split[16])));
+						ha2.setColor(new Color(Integer.parseInt(split[12])));
+						ha2.setSelected(true);
+						updateHexagonCmd = new UpdateHexagonCmd(ha1,ha2);
+						commands.add(updateHexagonCmd);
+						//selectedShapes.remove(ha1);
+						
+						updateHexagonCmd.execute();
+						logger.log("Modify_hexagon: " + ha2.toString());
+						temp.clear();
+						
+						//ha2.setSelected(true);
+						//selectedShapes.add(ha2);
+					}
+				}
+			}
+			
+			
 		}
 		else if(s.contains("Modify_rectangle")) {
 			String []split =s.split(",|\\[|\\]|\\=|\\ ");
-			Rectangle r1 = (Rectangle)selectedShapes.get(selectedShapes.size()-1);
-			Rectangle r2 = new Rectangle(new Point(Integer.parseInt(split[5]), Integer.parseInt(split[6])), Integer.parseInt(split[10]), 
-					Integer.parseInt(split[13]), new Color(Integer.parseInt(split[17])), new Color(Integer.parseInt(split[21])));
-			UpdateRectangleCmd updateRectangleCmd= new UpdateRectangleCmd(r1,r2);
-			commandsC.add(updateRectangleCmd);
-			commands.add(updateRectangleCmd);
-			updateRectangleCmd.execute();
-			logger.log("Modify_rectangle: " + r2.toString());
-			//array[lineNumber]="Modify_rectabgle: " + r2.toString();
+			
+			for(int i=0;i<model.getShapes().size();i++) {
+				
+				if(model.getShapes().get(i) instanceof Rectangle) {
+					
+					if(model.getShapes().get(i).isSelected()) {
+						Rectangle r1 = (Rectangle)model.getShapes().get(i);
+						Rectangle r2 = new Rectangle(new Point(Integer.parseInt(split[5]), Integer.parseInt(split[6])), Integer.parseInt(split[10]), 
+								Integer.parseInt(split[13]), new Color(Integer.parseInt(split[17])), new Color(Integer.parseInt(split[21])));
+						r2.setSelected(true);
+						updateRectCmd = new UpdateRectangleCmd(r1,r2);
+						commands.add(updateRectCmd);
+						//selectedShapes.remove(r1);
+						
+						updateRectCmd.execute();
+						logger.log("Modify_rectangle: " + r2.toString());
+						temp.clear();
+						
+						//r2.setSelected(true);
+						//selectedShapes.add(r2);
+					}
+				}
+			}
+		
 		}
 		
 		/*-----------------------------------------------------------------------------FRONT, BACK---------------------------------------------------------------------------------------*/

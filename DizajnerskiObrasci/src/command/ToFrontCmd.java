@@ -1,5 +1,7 @@
 package command;
 
+import java.util.ArrayList;
+
 import javax.swing.JOptionPane;
 
 import geometry.Shape;
@@ -11,13 +13,14 @@ public class ToFrontCmd implements CommandShape{
 
 	private DrawingModel model;
 	private Shape shape;
-	private DrawingFrame frame;
-	private Logger logger;
+	///private DrawingFrame frame;
+	//private ArrayList<Shape> selectedShapes;
 
 	public ToFrontCmd(DrawingModel model, Shape shape) {
 		super();
 		this.model = model;
 		this.shape = shape;
+		
 	}
 	@Override
 	public void execute() {
